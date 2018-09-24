@@ -1,0 +1,52 @@
+Supervisor
+-Agrega ordenes y asigna a usuario.(orden de manufactura y fibra, maquina, posicion, rollo, longitud, )
+ -validar al agregar las ordenes si el rollo aun tiene disponible
+ - cada rollo tiene una longtud esperada y otra real
+ - validar contra lo real conumido
+ - manejar alerta cuando ya no alcance un rollo 
+ - el controlador.-
+1.-updateCut .- envia los datos de la orden a procesar
+2.-pausa.- envia (maquina,id_orden) si no hay pausa generar un registro de pausa, si hay registro de pausa update de fin de pausa-mostrar las pausas en pantalla de la orden actual
+3.-send.- remoteAccess catchNewCut(maquina, id_corte, inicio y fin de hardware, longitud consumida ylog de defecto)
+
+Pantallas
+Supervisor cargar ordenes
+Operador ve lista de ordenes y puede cambiar el orden, ver la que se procesa actualmente.
+
+Tabla cortes agregar un campo para tipo de corte, agragrlo en pantalla de captura de rollos
+
+estatus de rollo
+-Ordenado
+-Nuevo en stock
+-En produccion
+-Terminado
+-Devuelto a proveedor
+
+Rollos, tiene  estatus.
+
+Junta del 4 enero
+-Al dar de alta un corte poder asignarlo a una maquina o sin asignar.
+Al asignar tener 2 opciones( primero material, maquina, posicion) o por (lista de rollos en almacen).
+Seleccionar la categoria de corte.
+
+-En updateCut hacer update solo al sotware init, el hardware sera el datoque nos mande la interfase
+
+-Al hacer login de operador, validar no hay alguien en la maquina, validar que no este en 2 maquinas, excepcion si es el mismo usuario y misma maquina dejar pasar.
+
+-historial de rollos.- movimientos desde que se da de alta.
+
+-tablas de proveedores y fibras agregar los campos que vienen en el excel
+
+Usar id como dato unico de corte.
+
+Propuestas nuevas
+agregar catalogo de almacenes, al dar de alta un rollo
+
+
+CN se calcula consecutivo en cada mes y son independientes por programa
+hacer adminisracion de catalogo de programas
+En programar rollos mostrar que rollos estan en la lista de posiciones y valkdar que no pueda poner un rollo en una posicion ocupada
+historial sea de ordenes consumo (campo de texto)
+catalogo de numero de partes con long aprox
+
+en cortes agregar numero de parte, cada numero de parte puede ser de diferentes fibras, y cada uno de ellos tiene una logitud

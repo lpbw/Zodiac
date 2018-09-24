@@ -132,28 +132,34 @@
                 //cuando se va a guardar un parche
                 if($_POST["id_cut_type"]=="3")
                 {
-                    $fibra_id=$_POST["fibra_id"];
-                    if(sizeof($fibra_id)>0)
+                    $roll_id=$_POST["roll_id"];
+                    $Arreglo = explode("|",$roll_id);
+                    $IdRollo = $Arreglo[0];
+                    $Fibra = $Arreglo[1];
+
+                    ///////////// Si Catura longitud seleccionado, guarda corte, resta fibra
+                    if($_POST["captura"]=="1")
                     {
-                        foreach($fibra_id as $na)   
-                        {
-                            //calcula orden de produccion consecutivo en lectra espeicificada
-                            $consulta6="select max(orden) as orden from cuts where location_assigned_id=$loc_asi and status<3 and deleted_at is null ";
-                            $resultado6 = mysql_query($consulta6) or die("Error en operacion1: $consulta6 " . mysql_error());
-                            $res6=mysql_fetch_assoc($resultado6);
-                            $orden=$res6['orden'];
-                            if($orden>0)
-                            {
-                                $orden=$orden+1;
-                            } 
-                            else
-                            {
-                                $orden=1;
-                                $consulta2  =  "insert into cuts(mo, cn, roll_id, user_id, location_assigned_id, number_position, orden, length_measured, created_at, id_cut_type, id_programa, parte, fiber_id, length_consumed, length_defect,status) values('".$_POST["mo"]."', '0', '".$roll_id."', $idU, '".$loc_asi."', '0', ".$orden.",  '0', now(), '".$_POST["id_cut_type"]."', '".$_POST["id_programa"]."', '0', '$na', ".$long.", ".$long_def.", ".$status.")";
-                                $resultado2 = mysql_query($consulta2) or die("Error en operacion1: $consulta2 " . mysql_error());
-                            }	   
-                        }
+                        $long=$_POST["longitud"];
+                        $long_def=$_POST["longitud_def"];
+                        
+                        $status="3";
                     }
+                   
+                    //if(sizeof($fibra_id)>0)
+                    //{
+                       // foreach($fibra_id as $na)   
+                       // {
+                            //calcula orden de produccion consecutivo en lectra espeicificada
+                           
+                                //$orden=1;
+                                $consulta2  =  "insert into cuts(mo, cn, roll_id, user_id, location_assigned_id, number_position, orden, length_measured, created_at, id_cut_type, id_programa, parte, fiber_id, length_consumed, length_defect,status)";
+                                $consulta2 .= "values('".$_POST["mo"]."', '0', '".$IdRollo."', $idU, '0', '0', '0',  '0', now(), '".$_POST["id_cut_type"]."', '0', '0', '$Fibra', ".$long.", ".$long_def.", ".$status.")";
+                                $resultado2 = mysql_query($consulta2) or die("Error en operacion1: $consulta2 " . mysql_error());
+                            	   
+                     //   }
+                  //  }
+                    //echo"<script>alert('$long');</script>"; 
                     echo"<script>alert(\"Parches Guardados\");</script>";
                 }
                 else		

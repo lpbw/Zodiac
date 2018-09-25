@@ -468,9 +468,9 @@ function buscaLugar()
 
 function validar()
 {
-    if (document.form1.id_cut_type.value != 6)
+    if (document.form1.id_cut_type.value != 6)//daily
     {
-        if (document.form1.id_cut_type.value != 3) 
+        if (document.form1.id_cut_type.value != 3)//parche 
         {
             if(document.form1.location_assigned_id.value==0)
             {
@@ -485,6 +485,10 @@ function validar()
     }
     else
     {
+        var condiciones = $("#captura").is(":checked");
+        if (condiciones) {
+            $("#captura").prop("checked", false);
+        }
         document.querySelector('#id_p').required = false;
         return true;
     }

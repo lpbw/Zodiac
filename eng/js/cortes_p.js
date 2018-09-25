@@ -22,12 +22,12 @@ $(document).ready(function(){
                 changepicturecallback: function(){ _bsap.exec(); }
             });
 
-    //Selecciona programa.
-    $('#id_p').on('input',function() {
-        var opt = $('option[value="'+$(this).val()+'"]');
-        $("#id_programa").val(opt.attr('id'));
-        buscaPrograma(opt.attr('id'));
-    });
+     //Selecciona programa.
+     $('#id_p').on('input', function () {
+         var opt = $('option[value="' + $(this).val() + '"]');
+         $("#id_programa").val(opt.attr('id'));
+         buscaPrograma(opt.attr('id'));
+     });
 
     //Selecciona numero de parte.
     //Selecciona numero de parte.
@@ -253,42 +253,68 @@ return false;
 
 }
 
-function buscaParche()
-{
-$('#id_p').val("");
-$('#nparte').val("");
-$('#fibra_id').hide();
-$('#d_fibra').html("<label>Fibra:</label>");
-var tipocorte = $('#id_cut_type').val();
-if(tipocorte == 3)
-{
-    $('#length_measured').val(0);
-    var strUserAgent = navigator.userAgent.toLowerCase(); 
-    var isIE = strUserAgent.indexOf("msie") > -1; 
-    var xmlhttp;
-    var resultado;
-    if (window.XMLHttpRequest)
-    {// code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp=new XMLHttpRequest();
+/*
+Funcion llamada en cortes cuando seleccionas tipos de corte.
+
+*/
+function buscaParche() {
+    $("#captura").prop("checked", false);
+    $('#id_p').val("");
+    $('#nparte').val("");
+    $('#fibra_id').hide();
+    $('#d_fibra').html("<label>Fibra:</label>");
+    var tipocorte = $('#id_cut_type').val();
+
+    /**
+     * Cuando el tipo de corte es Daily
+     */
+    if (tipocorte == 6) {
+        var a = document.getElementById('d_fibra');
+        a.style.visibility = "hidden";
+        var b = document.getElementById('d_prog');
+        b.style.visibility = "hidden";
+        var c = document.getElementById('d_parte');
+        c.style.visibility = "hidden";
+        var d = document.getElementById('d_lugar');
+        d.style.visibility = "hidden";
+    } else {
+        var a = document.getElementById('d_fibra');
+        a.style.visibility = "visible";
+        var b = document.getElementById('d_prog');
+        b.style.visibility = "visible";
+        var c = document.getElementById('d_parte');
+        c.style.visibility = "visible";
+        var d = document.getElementById('d_lugar');
+        d.style.visibility = "visible";
     }
-    else
-    {// code for IE6, IE5
-        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange=function()
-    {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
-        {
-            resultado=xmlhttp.responseText;  
-            var m=document.getElementById('d_lugar');
-            m.innerHTML=resultado;
+    /**
+     * Tipo de corte es parche.
+     */
+    if (tipocorte == 3) {
+        $("#captura").prop("checked", true);
+        $('#length_measured').val(0);
+        var strUserAgent = navigator.userAgent.toLowerCase();
+        var isIE = strUserAgent.indexOf("msie") > -1;
+        var xmlhttp;
+        var resultado;
+        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else { // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                resultado = xmlhttp.responseText;
+                var m = document.getElementById('d_lugar');
+                m.innerHTML = resultado;
+            }
+        }
+        var tipo = 0;
+        xmlhttp.open("GET", "mostrarLectra.php", true);
+        xmlhttp.send();
+        buscaParte(999999);
     }
-    var tipo=0;
-    xmlhttp.open("GET","mostrarLectra.php",true);
-    xmlhttp.send();
-}
-return false;		
+    return false;
 }
 
 function mostrarLectras()
@@ -432,13 +458,33 @@ else
     
 }
 
-function validar()
+function validar() 
 {
-if(document.form1.location_assigned_id.value==0)
-{
-    alert("Seleccione Lugar");
-    return false;
-}
+    if (document.form1.id_cut_type.value != 6) //daily
+    {
+        if (document.form1.id_cut_type.value != 3) //parche
+        {
+            if (document.form1.location_assigned_id.value == 0) 
+            {
+                alert("Seleccione Lugar");
+                return false;
+            }
+        } 
+        else 
+        {
+            document.querySelector('#id_p').required = false;
+        }
+    } 
+    else 
+    {
+        var condiciones = $("#captura").is(":checked");
+        if (condiciones)
+        {
+            $("#captura").prop("checked", false);
+        }
+        document.querySelector('#id_p').required = false;
+        return true;
+    }
 }
 
 function mostrar(posicion)

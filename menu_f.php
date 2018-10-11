@@ -50,10 +50,7 @@
                     <a href="terminadas.php"><i class="fa  fa-fw"></i>Ordenes Terminadas</a>                         </li>
 					 <li>
                     <a href="down_time_report.php"><i class="fa  fa-fw"></i>Reporte de Tiempos Muertos</a>                         </li>  
-					 <li>
-                        <a href="reporteejecutivo.php"><i class="fa  fa-fw"></i>Reporte Ejecutivo</a>
-                     </li>
-                     <? 
+					 <? 
 					 
 					 if($tipoU=="1"){?>
 					 <li>
@@ -79,12 +76,13 @@
                           <a href="usuarios.php"><i class="fa  fa-fw"></i> Usuarios</a>                        </li>
                       <li>
                           <a href="razones.php"><i class="fa  fa-fw"></i> Razones</a>                                           </li>
+					<? if($tipoU=="1"){?>
 					 <li>
                           <a href="defectos.php"><i class="fa  fa-fw"></i> Defectos</a>                                           </li>
                      <!-- <li>
                           <a href="states"><i class="fa fa-arrows-h fa-fw"></i> Estados</a>                                    </li>-->
 					   
-					<? if($tipoU=="1"){?>
+					
                       <li>
                           <a href="partes.php"><i class="fa  fa-fw"></i> Numero Parte</a>                      </li>
 					  <li>

@@ -2,7 +2,7 @@
     session_start();
     include "coneccion.php";
     include "checar_sesion_admin.php";
-    $Hoy = date('Y-m-d');
+    $Hoy = date('m/d/Y');
 ?>
 <!doctype html>
 <html lang="es">
@@ -45,26 +45,12 @@
  
             $(document).ready(function(){
                 //calendario
-                $('.datepicker').datepicker({dateFormat: 'yy-mm-dd'});
+                $('.datepicker').datepicker();
             });
 
         </script>
-        <!-- <style>
-        .loader {
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-    background: url('images/cargando.gif') 50% 50% no-repeat rgb(249,249,249);
-    opacity: 1;
-    display: none;
-}
-        </style> -->
     </head>
     <body>
-        <!-- <div class="loader"></div> -->
         <div id="wrapper">
             <!-- Navigation -->
             <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -143,30 +129,14 @@
                             </div>
                         </span>
                     </div>
-                    
-                    <!-- fecha desde -->
-                    <div class="col-sm-6 col-md-3 col-lg-3">
-                        <label for="desde">
-                            Desde:
-                        </label>
-                        <input class="datepicker form-control" data-date-format="mm/dd/yyyy" value="<? echo $Hoy?>" id="desde" name="desde" readonly/>
-                    </div>
-
-                    <!-- hasta -->
-                    <div class="col-sm-6 col-md-3 col-lg-3">
-                        <label for="hasta">
-                            Hasta:
-                        </label>
-                        <input class="datepicker form-control" data-date-format="mm/dd/yyyy" value="<? echo $Hoy?>" id="hasta" name="hasta" readonly/>
-                    </div>
 
                     <!-- Maquina(lectras) -->
-                    <div class="col-sm-6 col-md-2 col-lg-2">
-                        <label for="maquina">
+                    <div class="col-sm-6 col-md-3 col-lg-3">
+                        <label for="location_id">
                             Maquina:
                         </label>
-                        <select class="form-control" id="maquina" name="maquina">
-                            <option value="0" selected="selected">--Todas--</option>
+                        <select class="form-control" id="location_id" name="location_id" onchange="Buscar();">
+                            <option value="0" selected="selected">--Selecciona Lugar--</option>
                             <?	  
                                 $consulta  = "SELECT id, name FROM locations where deleted_at is null";
                                 $resultado = mysql_query($consulta) or die("La consulta fall&oacute;P1: " . mysql_error());
@@ -181,46 +151,51 @@
                         </select>
                         <input type="hidden" name="ta" id="ta" value="0">
                     </div>
+                    
+                    <!-- fecha desde -->
+                    <div class="col-sm-6 col-md-3 col-lg-3">
+                        <label for="desde">
+                            Desde:
+                        </label>
+                        <input class="datepicker form-control" data-date-format="mm/dd/yyyy" value="<? echo $Hoy?>" id="desde" name="desde" readonly onchange="Buscar();" />
+                    </div>
+
+                    <!-- hasta -->
+                    <div class="col-sm-6 col-md-3 col-lg-3">
+                        <label for="hasta">
+                            Hasta:
+                        </label>
+                        <input class="datepicker form-control" data-date-format="mm/dd/yyyy" value="<? echo $Hoy?>" id="hasta" name="hasta" readonly onchange="Buscar();"/>
+                    </div>
 
                     <!-- turno -->
-                    <div class="col-sm-6 col-md-2 col-lg-2">
+                    <div class="col-sm-6 col-md-3 col-lg-3">
                         <label for="turno">
                             Turno:
                         </label>
-                        <select class="form-control" id="turno" name="turno">
-                            <option value="0" selected="selected">--Todos--</option>
-                            <option value="1" >Primer Turno</option>
-                            <option value="2" >Segundo Turno</option>
-                            <option value="3" >Tercer Turno</option>
+                        <select class="form-control" id="turno" name="turno" onchange="Buscar();">
+                            <option value="0" selected="selected">--Selecciona Turno--</option>
+                           
                         </select>
                     </div>
-                    
-                    <!-- boton buscar -->
-                    <div class="col-sm-6 col-md-2 col-lg-2">
-                        <input type="button" class="btn red-submit button-form" name="buscar" value="Buscar" onclick="Buscar();"/>
-                    </div>
-
 
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         
                     </div>
 
                     <!-- grafica 1 -->
-                    <div class="col-sm-6 col-md-4 col-lg-4" >
-                        <label for="myChart1"><b> Tiempo Total</b></label> 
+                    <div class="col-sm-6 col-md-4 col-lg-4">
                         <canvas id="myChart1"></canvas>
                     </div>
 
                     <!-- grafica 2 -->
                     <div class="col-sm-6 col-md-4 col-lg-4">
-                        <label for="myChart2"><b> Mantenimiento</b></label> 
-                        <canvas id="myChart2"></canvas>
+                        <div id="container2"></div>
                     </div>
 
                     <!-- grafica 3 -->
                     <div class="col-sm-6 col-md-4 col-lg-4">
-                       <label for="myChart3"><b> Tiempo Operador</b></label> 
-                        <canvas id="myChart3"></canvas>
+                       <div id="container3"></div>
                     </div>	       
                 </div>
             </div> 
@@ -239,8 +214,6 @@
 
             <!-- grafica -->
             <script>
-
-                //Tiempo completo
                 var ctx = document.getElementById("myChart1");
                 var myChart = new Chart(ctx, {
                     type: 'pie',
@@ -250,172 +223,50 @@
                             label: "Tiempo Total",
                             data: [0,0,0],
                             backgroundColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(118, 183, 102, 1)'
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)'
                             ],
                             borderColor: [
                                 'rgba(255,99,132,1)',
                                 'rgba(54, 162, 235, 1)',
-                                'rgba(118, 183, 102, 1)'
+                                'rgba(255, 206, 86, 1)'
                             ],
                             borderWidth: 1
                         }]
                     },
                     options: {
-                                legend: {
-                                    labels: {
-                                        // This more specific font property overrides the global property
-                                        fontColor: 'white'
-                                    }
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
                                 }
+                            }]
+                        }
                     }
                 });
 
-                //manteniemiento
-                var ctx2 = document.getElementById("myChart2");
-                var myChart2 = new Chart(ctx2, {
-                    type: 'pie',
-                    data: {
-                        labels: ["FALLA", "Paro Mtto. Lectra", "Paro Mtto. IT","Paro Mtto."],
-                        datasets: [{
-                            label: "Tiempo Total",
-                            data: [0,0,0,0],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(118, 183, 102, 1)'
-                            ],
-                            borderColor: [
-                                'rgba(255,99,132,1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(118, 183, 102, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                                legend: {
-                                    labels: {
-                                        // This more specific font property overrides the global property
-                                        fontColor: 'white'
-                                    }
-                                }
-                    }
-                });
-                
-                //operadores y setup
-                var ctx3 = document.getElementById("myChart3");
-                var myChart3 = new Chart(ctx3, {
-                    type: 'pie',
-                    data: {
-                        labels: ["Comida.","Enfermeria","Paro por 5's","Cambio de rollo","Impresion en proceso", "Cabezal marcando.","Baño","Esperando  MO"],
-                        datasets: [{
-                            label: "Tiempo Total",
-                            data: [0,0,0,0,0,0,0,0],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(118, 183, 102, 1)',
-                                'rgba(25, 82, 173, 1)',
-                                'rgba(182, 26, 167, 1)',
-                                'rgba(231, 225, 54, 1)',
-                                'rgba(232, 186, 227, 1)'
-                            ],
-                            borderColor: [
-                                'rgba(255,99,132,1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(118, 183, 102, 1)',
-                                'rgba(25, 82, 173, 1)',
-                                'rgba(182, 26, 167, 1)',
-                                'rgba(231, 225, 54, 1)',
-                                'rgba(232, 186, 227, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                                legend: {
-                                    labels: {
-                                        // This more specific font property overrides the global property
-                                        fontColor: 'white'
-                                    }
-                                }
-                    }
-                });
+
 
                 // Actualilzar
                 function Buscar()
                 {
-                    // $(".loader").show();
-                   var Desde = $("#desde").val();
-                   var Hasta = $("#hasta").val();
-                   var Maquina = $("#maquina").val();
-                   var Turno =$("#turno").val();
-                   var parametros = {
-                        "desde" : Desde,
-                        "hasta" : Hasta,
-                        "maquina" : Maquina,
-                        "turno" : Turno
-                    };
-                    //buscar grafica 1
+                    var da=[1,9,90];
+                    //buscar datos
                     $.ajax({
-                        type: 'POST',
-                        url: "valoresgraficas.php?grafica=1",
-                        data: parametros,
-                        dataType: 'json',
-                        cache: false,
+                        url: "valoresgraficas.php",
                         beforeSend: function( xhr ) {
                             
                         }
                     })
                     .done(function( response ) {
-                        //alert(response);
-                        myChart.data.datasets[0].data=[response[0],response[1],response[2]];
+                        console.log(response);
+                        
+                        da=[response]
+                       myChart.data.datasets[0].data=da;
                         myChart.update();
-                        // $(".loader").hide(4000);
                     });
                    
-                   //buscar grafica 2
-                    $.ajax({
-                        type: 'POST',
-                        url: "valoresgraficas.php?grafica=2",
-                        data: parametros,
-                        dataType: 'json',
-                        cache: false,
-                        beforeSend: function( xhr ) {
-                            
-                        }
-                    })
-                    .done(function( response ) {
-                        //alert(response);
-                        myChart2.data.datasets[0].data=[response[0],response[1],response[2],response[3]];
-                        myChart2.update();
-                        // $(".loader").hide(4000);
-                    });
-                    
-                    //buscar grafica 3
-                    $.ajax({
-                        type: 'POST',
-                        url: "valoresgraficas.php?grafica=3",
-                        data: parametros,
-                        dataType: 'json',
-                        cache: false,
-                        beforeSend: function( xhr ) {
-                            
-                        }
-                    })
-                    .done(function( response ) {
-                        //alert(response);
-                        myChart3.data.datasets[0].data=[response[0],response[1],response[2],response[3],response[4],response[5],response[6],response[7]];
-                        myChart3.update();
-                        // $(".loader").hide(4000);
-                    });
-
                 }
             </script>
         </footer>

@@ -245,19 +245,19 @@
                 var myChart = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: ["Activo", "Mantenimietno", "Operador"],
+                        labels: ["Activo", "Mantenimiento", "Operador"],
                         datasets: [{
                             label: "Tiempo Total",
                             data: [0,0,0],
                             backgroundColor: [
-                                'rgba(255, 99, 132, 1)',
+                                'rgba(118, 183, 102, 1)',
                                 'rgba(54, 162, 235, 1)',
-                                'rgba(118, 183, 102, 1)'
+                                'rgba(255, 99, 132, 1)'
                             ],
                             borderColor: [
-                                'rgba(255,99,132,1)',
+                                'rgba(118, 183, 102, 1)',
                                 'rgba(54, 162, 235, 1)',
-                                'rgba(118, 183, 102, 1)'
+                                'rgba(255,99,132,1)'
                             ],
                             borderWidth: 1
                         }]
@@ -283,16 +283,16 @@
                             label: "Tiempo Total",
                             data: [0,0,0,0],
                             backgroundColor: [
-                                'rgba(255, 99, 132, 1)',
+                                'rgba(118, 183, 102, 1)',
                                 'rgba(54, 162, 235, 1)',
                                 'rgba(255, 206, 86, 1)',
-                                'rgba(118, 183, 102, 1)'
+                                'rgba(194, 0, 0, 1)'
                             ],
                             borderColor: [
-                                'rgba(255,99,132,1)',
+                                'rgba(118, 183, 102, 1)',
                                 'rgba(54, 162, 235, 1)',
                                 'rgba(255, 206, 86, 1)',
-                                'rgba(118, 183, 102, 1)'
+                                'rgba(194, 0, 0, 1)'
                             ],
                             borderWidth: 1
                         }]
@@ -376,7 +376,7 @@
                     })
                     .done(function( response ) {
                         //alert(response);
-                        myChart.data.labels=["Activo ("+response[0]+")", "Mantenimietno ("+response[1]+")", "Operador ("+response[2]+")"];
+                        myChart.data.labels=["Activo ("+response[0]+")", "Mantenimiento ("+response[1]+")", "Operador ("+response[2]+")"];
                         myChart.data.datasets[0].data=[response[0],response[1],response[2]];
                         myChart.update();
                         // $(".loader").hide(4000);

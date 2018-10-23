@@ -263,6 +263,7 @@
                         }]
                     },
                     options: {
+                                display: true,
                                 legend: {
                                     labels: {
                                         // This more specific font property overrides the global property
@@ -375,6 +376,7 @@
                     })
                     .done(function( response ) {
                         //alert(response);
+                        myChart.data.labels=["Activo ("+response[0]+")", "Mantenimietno ("+response[1]+")", "Operador ("+response[2]+")"];
                         myChart.data.datasets[0].data=[response[0],response[1],response[2]];
                         myChart.update();
                         // $(".loader").hide(4000);
@@ -393,6 +395,7 @@
                     })
                     .done(function( response ) {
                         //alert(response);
+                        myChart2.data.labels=["FALLA("+response[0]+")", "Paro Mtto. Lectra ("+response[1]+")", "Paro Mtto. IT ("+response[2]+")","Paro Mtto ("+response[3]+")"];
                         myChart2.data.datasets[0].data=[response[0],response[1],response[2],response[3]];
                         myChart2.update();
                         // $(".loader").hide(4000);
@@ -411,6 +414,7 @@
                     })
                     .done(function( response ) {
                         //alert(response);
+                        myChart3.data.labels=["Comida ("+response[0]+")","Enfermeria ("+response[1]+")","Paro por 5's ("+response[2]+")","Cambio de rollo ("+response[3]+")","Impresion en proceso ("+response[4]+")", "Cabezal marcando ("+response[5]+")","Baño ("+response[6]+")","Esperando  MO ("+response[7]+")"]
                         myChart3.data.datasets[0].data=[response[0],response[1],response[2],response[3],response[4],response[5],response[6],response[7]];
                         myChart3.update();
                         // $(".loader").hide(4000);

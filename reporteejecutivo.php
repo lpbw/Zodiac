@@ -263,7 +263,7 @@
                         }]
                     },
                     options: {
-                                display: true,
+                                showAllTooltips: true,
                                 legend: {
                                     labels: {
                                         // This more specific font property overrides the global property
@@ -348,7 +348,7 @@
                                 }
                     }
                 });
-
+                    
                 // Actualilzar
                 function Buscar()
                 {
@@ -376,6 +376,7 @@
                     })
                     .done(function( response ) {
                         //alert(response);
+                         myChart.data.showAllTooltips = false;
                         myChart.data.labels=["Activo ("+response[0]+")", "Mantenimiento ("+response[1]+")", "Operador ("+response[2]+")"];
                         myChart.data.datasets[0].data=[response[0],response[1],response[2]];
                         myChart.update();

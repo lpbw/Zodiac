@@ -46,6 +46,9 @@
 
                  <li>
                     <a href="terminadas.php"><i class="fa  fa-fw"></i>Finished MOs</a>                         </li>  
+					 <li>
+                        <a href="reporteejecutivo.php"><i class="fa  fa-fw"></i>Executive report</a>                         
+                    </li>  
 					 
 					 <? if($tipoU=="1"){?>
 					 <li>

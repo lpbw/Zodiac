@@ -35,11 +35,11 @@
         <script>
            
             //funcion para el popup.
-            function myFunction()
-            {
-                var popup = document.getElementById("myPopup");
-                popup.classList.toggle("show");
-            }
+            // function myFunction()
+            // {
+            //     var popup = document.getElementById("myPopup");
+            //     popup.classList.toggle("show");
+            // }
            
 
  
@@ -83,7 +83,7 @@
             </nav>
             <div id="page-wrapper">
                 <div class="row">
-                    <h1 class="page-header">Reporte ejecutivo de tiempos muertos</h1>
+                    <h1 class="page-header">Dead time executive report</h1>
                     <div class="divider">
                     </div>
                     <div align="right"  class="popup" >
@@ -92,7 +92,7 @@
                                 &nbsp;&nbsp;?&nbsp;&nbsp;
                             </span>
                         </strong>
-                        <span class="popuptext" id="myPopup">
+                        <!-- <span class="popuptext" id="myPopup">
                             <p align="left">
                                 <strong>
                                     Rollos
@@ -141,13 +141,13 @@
                                     </li>
                                 </ul>
                             </div>
-                        </span>
+                        </span> -->
                     </div>
                     
                     <!-- fecha desde -->
                     <div class="col-sm-6 col-md-3 col-lg-3">
                         <label for="desde">
-                            Desde:
+                            From:
                         </label>
                         <input class="datepicker form-control" data-date-format="mm/dd/yyyy" value="<? echo $Hoy?>" id="desde" name="desde" readonly/>
                     </div>
@@ -155,7 +155,7 @@
                     <!-- hasta -->
                     <div class="col-sm-6 col-md-3 col-lg-3">
                         <label for="hasta">
-                            Hasta:
+                            To:
                         </label>
                         <input class="datepicker form-control" data-date-format="mm/dd/yyyy" value="<? echo $Hoy?>" id="hasta" name="hasta" readonly/>
                     </div>
@@ -163,10 +163,10 @@
                     <!-- Maquina(lectras) -->
                     <div class="col-sm-6 col-md-2 col-lg-2">
                         <label for="maquina">
-                            Maquina:
+                            Lectra:
                         </label>
                         <select class="form-control" id="maquina" name="maquina">
-                            <option value="0" selected="selected">--Todas--</option>
+                            <option value="0" selected="selected">--All--</option>
                             <?	  
                                 $consulta  = "SELECT id, name FROM locations where deleted_at is null";
                                 $resultado = mysql_query($consulta) or die("La consulta fall&oacute;P1: " . mysql_error());
@@ -185,19 +185,19 @@
                     <!-- turno -->
                     <div class="col-sm-6 col-md-2 col-lg-2">
                         <label for="turno">
-                            Turno:
+                            Turn:
                         </label>
                         <select class="form-control" id="turno" name="turno">
-                            <option value="0" selected="selected">--Todos--</option>
-                            <option value="1" >Primer Turno</option>
-                            <option value="2" >Segundo Turno</option>
-                            <option value="3" >Tercer Turno</option>
+                            <option value="0" selected="selected">--All--</option>
+                            <option value="1" >First Turn</option>
+                            <option value="2" >Second shift</option>
+                            <option value="3" >Third shift</option>
                         </select>
                     </div>
                     
                     <!-- boton buscar -->
                     <div class="col-sm-6 col-md-2 col-lg-2">
-                        <input type="button" class="btn red-submit button-form" name="buscar" value="Buscar" onclick="Buscar();"/>
+                        <input type="button" class="btn red-submit button-form" name="buscar" value="Search" onclick="Buscar();"/>
                     </div>
 
 
@@ -207,32 +207,32 @@
 
                     <!-- grafica 1 -->
                     <div class="col-sm-6 col-md-4 col-lg-4" >
-                        <label for="myChart1"><b> Tiempo Total</b></label> 
+                        <label for="myChart1"><b> Total time</b></label> 
                         <canvas id="myChart1"></canvas>
                     </div>
 
                     <!-- grafica 2 -->
                     <div class="col-sm-6 col-md-4 col-lg-4">
-                        <label for="myChart2"><b> Mantenimiento</b></label> 
+                        <label for="myChart2"><b> Maintenance</b></label> 
                         <canvas id="myChart2"></canvas>
                     </div>
 
                     <!-- grafica 3 -->
                     <div class="col-sm-6 col-md-4 col-lg-4">
-                       <label for="myChart3"><b> Tiempo Operador</b></label> 
+                       <label for="myChart3"><b> Operator Time</b></label> 
                         <canvas id="myChart3"></canvas>
                     </div>	       
 
 										<!-- tabla de totales -->
                     <div class="col-sm-12 col-md-12 col-lg-12">
-											<label><b> Tiempo Total</b></label> 
+											<label><b> Total time</b></label> 
 											<table class="table table-striped table-condensed">
 												<thead>
-													<th>Desde</th>
-													<th>Hasta</th>
-													<th>Activo</th>
-													<th>Mantenimiento</th>
-													<th>Operador</th>
+													<th>From</th>
+													<th>To</th>
+													<th>active</th>
+													<th>Maintenance</th>
+													<th>Operator</th>
 												</thead>
 												<tbody>
 													<tr id="tabletotal">
@@ -244,12 +244,12 @@
 
 										<!-- tabla de mantenimientos -->
                     <div class="col-sm-12 col-md-12 col-lg-12">
-											<label><b> Mantenimiento</b></label> 
+											<label><b> Maintenance</b></label> 
 											<table class="table table-striped table-condensed">
 												<thead>
-													<th>Desde</th>
-													<th>Hasta</th>
-													<th>FALLA</th>
+													<th>From</th>
+													<th>To</th>
+													<th>FAILURE</th>
 													<th>Paro Mtto. Lectra</th>
 													<th>Paro Mtto. IT</th>
 													<th>Paro Mtto</th>
@@ -267,16 +267,16 @@
 											<label><b> Operador</b></label> 
 											<table class="table table-striped table-condensed">
 												<thead>
-													<th>Desde</th>
-													<th>Hasta</th>
-													<th>Comida</th>
-													<th>Enfermeria</th>
-													<th>Paro por 5's</th>
-													<th>Cambio de rollo</th>
-													<th>Impresion en proceso</th>
-													<th>Cabezal marcando</th>
-													<th>Baño</th>
-													<th>Esperando  MO</th>
+													<th>From</th>
+													<th>To</th>
+													<th>Eat</th>
+													<th>Nurcering</th>
+													<th>Stop for 5's</th>
+													<th>Roll change</th>
+													<th>Impression in process</th>
+													<th>Head marking</th>
+													<th>Bath room</th>
+													<th>Waiting  MO</th>
 												</thead>
 												<tbody>
 													<tr id="tableoperador">
@@ -309,9 +309,9 @@
                 var myChart = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: ["Activo", "Mantenimiento", "Operador"],
+                        labels: ["Active", "Maintenance", "Operator"],
                         datasets: [{
-                            label: "Tiempo Total",
+                            label: "Total time",
                             data: [0,0,0],
                             backgroundColor: [
                                 'rgba(118, 183, 102, 1)',
@@ -342,9 +342,9 @@
                 var myChart2 = new Chart(ctx2, {
                     type: 'pie',
                     data: {
-                        labels: ["FALLA", "Paro Mtto. Lectra", "Paro Mtto. IT","Paro Mtto."],
+                        labels: ["Failure", "Stop Mtto. Lectra", "Stop Mtto. IT","Stop Mtto."],
                         datasets: [{
-                            label: "Tiempo Total",
+                            label: "Maintenance",
                             data: [0,0,0,0],
                             backgroundColor: [
                                 'rgba(118, 183, 102, 1)',
@@ -376,7 +376,7 @@
                 var myChart3 = new Chart(ctx3, {
                     type: 'pie',
                     data: {
-                        labels: ["Comida.","Enfermeria","Paro por 5's","Cambio de rollo","Impresion en proceso", "Cabezal marcando.","Baño","Esperando  MO"],
+                        labels: ["Eat.","Nurcering","Stop for 5's","Roll change","Impression in process", "Head marking","Bath room","Waiting  MO"],
                         datasets: [{
                             label: "Tiempo Total",
                             data: [0,0,0,0,0,0,0,0],
@@ -441,7 +441,7 @@
                     .done(function( response ) {
                         //alert(response);
                          myChart.data.showAllTooltips = false;
-                        myChart.data.labels=["Activo ("+response[0]+")", "Mantenimiento ("+response[1]+")", "Operador ("+response[2]+")"];
+                        myChart.data.labels=["Active ("+response[0]+")", "Mantenance ("+response[1]+")", "Operator ("+response[2]+")"];
                         myChart.data.datasets[0].data=[response[0],response[1],response[2]];
                         myChart.update();
 												$('#tabletotal').html("<td>"+Desde+"</td><td>"+Hasta+"</td><td>"+response[0]+"</td><td>"+response[1]+"</td><td>"+response[2]+"</td>");
@@ -461,7 +461,7 @@
                     })
                     .done(function( response ) {
                         //alert(response);
-                        myChart2.data.labels=["FALLA("+response[0]+")", "Paro Mtto. Lectra ("+response[1]+")", "Paro Mtto. IT ("+response[2]+")","Paro Mtto ("+response[3]+")"];
+                        myChart2.data.labels=["Failure("+response[0]+")", "Stop Mtto. Lectra ("+response[1]+")", "Stop Mtto. IT ("+response[2]+")","Stop Mtto ("+response[3]+")"];
                         myChart2.data.datasets[0].data=[response[0],response[1],response[2],response[3]];
                         myChart2.update();
 												$('#tablemantenimiento').html("<td>"+Desde+"</td><td>"+Hasta+"</td><td>"+response[0]+"</td><td>"+response[1]+"</td><td>"+response[2]+"</td><td>"+response[3]+"</td>");
@@ -481,7 +481,7 @@
                     })
                     .done(function( response ) {
                         //alert(response);
-                        myChart3.data.labels=["Comida ("+response[0]+")","Enfermeria ("+response[1]+")","Paro por 5's ("+response[2]+")","Cambio de rollo ("+response[3]+")","Impresion en proceso ("+response[4]+")", "Cabezal marcando ("+response[5]+")","Baño ("+response[6]+")","Esperando  MO ("+response[7]+")"]
+                        myChart3.data.labels=["Eat ("+response[0]+")","Nurcering ("+response[1]+")","stop for 5's ("+response[2]+")","Roll change ("+response[3]+")","Impression in process ("+response[4]+")", "Head marking ("+response[5]+")","Bath room ("+response[6]+")","Waiting  MO ("+response[7]+")"]
                         myChart3.data.datasets[0].data=[response[0],response[1],response[2],response[3],response[4],response[5],response[6],response[7]];
                         myChart3.update();
 												$('#tableoperador').html("<td>"+Desde+"</td><td>"+Hasta+"</td><td>"+response[0]+"</td><td>"+response[1]+"</td><td>"+response[2]+"</td><td>"+response[3]+"</td><td>"+response[4]+"</td><td>"+response[5]+"</td><td>"+response[6]+"</td><td>"+response[7]+"</td>");

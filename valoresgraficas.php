@@ -23,19 +23,19 @@
                 $Filtro1 = "";
             }
             else {
-                $Filtro1 = "AND location_id=$Maquina ";
+                $Filtro1 = "AND cp.location_id=$Maquina ";
             }
 
             //Cuando filtra por turno
             if ($Turno==0)
             {
-                $Filtro2 = "AND turno<>4";
+                $Filtro2 = "AND cp.turno<>4";
             }
             else {
-                $Filtro2 = "AND turno=$Turno";
+                $Filtro2 = "AND cp.turno=$Turno";
             }
 
-            $QueryTiempos = "SELECT tiempo,grupo FROM cierre_turnos WHERE fecha>='$Desde' AND fecha<='$Hasta' ".$Filtro1.$Filtro2;
+            $QueryTiempos = "SELECT timestampdiff(minute,cp.inicio,cp.fin) AS tiempo,dt.grupo AS grupo FROM cut_pause cp INNER JOIN down_time_reason dt ON cp.razon_id=dt.id WHERE DATE_FORMAT(inicio,'%Y-%m-%d')>='$Desde' AND DATE_FORMAT(inicio,'%Y-%m-%d')<='$Hasta' AND cp.fin<>'' ".$Filtro1.$Filtro2;
             $ResultadoTeimpos = mysql_query($QueryTiempos) or die("Error en Tiempos $QueryTiempos".mysql_error());
             
             while ($ResTiempos = mysql_fetch_assoc($ResultadoTeimpos))
@@ -69,6 +69,7 @@
             $Datos = array($TiempoActivo, $TiempoMtto, $TiempoOperador);
             
             echo json_encode($Datos);
+            //$QueryTiempos;
         break;
         
         //grafica 2
@@ -96,12 +97,12 @@
                 $Filtro2 = "AND turno=$Turno";
             }
 
-            $QueryMtto = "SELECT tiempo,tipo FROM cierre_turnos WHERE grupo=1 AND fecha>='$Desde' AND fecha<='$Hasta' ".$Filtro1.$Filtro2;
+            $QueryMtto = "SELECT cp.id,timestampdiff(minute,cp.inicio,cp.fin) AS tiempo,razon_id,dt.reason,dt.grupo FROM cut_pause cp INNER JOIN down_time_reason dt ON cp.razon_id=dt.id WHERE dt.grupo=1 AND DATE_FORMAT(inicio,'%Y-%m-%d')>='$Desde' AND DATE_FORMAT(inicio,'%Y-%m-%d')<='$Hasta' AND cp.fin<>'' ".$Filtro1.$Filtro2;
             $ResultadoMtto = mysql_query($QueryMtto) or die("Error en Mtto $QueryMtto".mysql_error());
 
             while ($ResMtto = mysql_fetch_assoc($ResultadoMtto))
             {
-               $Tipo = $ResMtto['tipo'];
+               $Tipo = $ResMtto['razon_id'];
 
                switch ($Tipo)
                {
@@ -161,12 +162,12 @@
                 $Filtro2 = "AND turno=$Turno";
             }
 
-            $QuerySetup = "SELECT tiempo,tipo FROM cierre_turnos WHERE grupo>=2 AND grupo<=3 AND fecha>='$Desde' AND fecha<='$Hasta' ".$Filtro1.$Filtro2;
+            $QuerySetup = "SELECT cp.id,timestampdiff(minute,cp.inicio,cp.fin) AS tiempo,razon_id,dt.reason,dt.grupo FROM cut_pause cp INNER JOIN down_time_reason dt ON cp.razon_id=dt.id WHERE dt.grupo>=2 AND dt.grupo<=3 AND DATE_FORMAT(inicio,'%Y-%m-%d')>='$Desde' AND DATE_FORMAT(inicio,'%Y-%m-%d')<='$Hasta' AND cp.fin<>'' ".$Filtro1.$Filtro2;
             $ResultadoSetup = mysql_query($QuerySetup) or die("Error en Setup $QuerySetup".mysql_error());
 
             while ($ResSetup = mysql_fetch_assoc($ResultadoSetup))
             {
-               $Tipo = $ResSetup['tipo'];
+               $Tipo = $ResSetup['razon_id'];
 
                switch ($Tipo)
                {
@@ -211,6 +212,7 @@
             $Datos = array($Comida, $Enfermeria, $Paro5s,$CambioRollo,$Impresion,$Cabezal,$Banio,$EsperandoMo);
             
             echo json_encode($Datos);
+            //echo $Tipo;
         break;
 
         default:

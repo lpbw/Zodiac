@@ -3,6 +3,9 @@
     include "coneccion.php";
     include "checar_sesion_admin.php";
     $Hoy = date('Y-m-d');
+	 $idU=$_SESSION['idU'];
+    $nombreU=$_SESSION['nombreU'];
+    $tipoU=$_SESSION['tipoU'];
 ?>
 <!doctype html>
 <html lang="es">
@@ -197,7 +200,7 @@
                     
                     <!-- boton buscar -->
                     <div class="col-sm-6 col-md-2 col-lg-2">
-                        <input type="button" class="btn red-submit button-form" name="buscar" value="Buscar" onclick="Buscar();"/>
+                        <input type="button" class="btn red-submit button-form" name="buscar" value="Buscar" onClick="Buscar();"/>
                     </div>
 
 
@@ -222,70 +225,6 @@
                        <label for="myChart3"><b> Tiempo Operador</b></label> 
                         <canvas id="myChart3"></canvas>
                     </div>	       
-
-										<!-- tabla de totales -->
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-											<label><b> Tiempo Total</b></label> 
-											<table class="table table-striped table-condensed">
-												<thead>
-													<th>Desde</th>
-													<th>Hasta</th>
-													<th>Activo</th>
-													<th>Mantenimiento</th>
-													<th>Operador</th>
-												</thead>
-												<tbody>
-													<tr id="tabletotal">
-														
-													</tr>
-												</tbody>
-											</table>
-                    </div>
-
-										<!-- tabla de mantenimientos -->
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-											<label><b> Mantenimiento</b></label> 
-											<table class="table table-striped table-condensed">
-												<thead>
-													<th>Desde</th>
-													<th>Hasta</th>
-													<th>FALLA</th>
-													<th>Paro Mtto. Lectra</th>
-													<th>Paro Mtto. IT</th>
-													<th>Paro Mtto</th>
-												</thead>
-												<tbody>
-													<tr id="tablemantenimiento">
-														
-													</tr>
-												</tbody>
-											</table>
-                    </div>
-
-										<!-- tabla de operador -->
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-											<label><b> Operador</b></label> 
-											<table class="table table-striped table-condensed">
-												<thead>
-													<th>Desde</th>
-													<th>Hasta</th>
-													<th>Comida</th>
-													<th>Enfermeria</th>
-													<th>Paro por 5's</th>
-													<th>Cambio de rollo</th>
-													<th>Impresion en proceso</th>
-													<th>Cabezal marcando</th>
-													<th>Baño</th>
-													<th>Esperando  MO</th>
-												</thead>
-												<tbody>
-													<tr id="tableoperador">
-														
-													</tr>
-												</tbody>
-											</table>
-                    </div>
-
                 </div>
             </div> 
         </div>
@@ -309,7 +248,7 @@
                 var myChart = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: ["Activo", "Mantenimiento", "Operador"],
+                        labels: ["Activo(min)", "Mantenimiento(min)", "Operador(min)"],
                         datasets: [{
                             label: "Tiempo Total",
                             data: [0,0,0],
@@ -342,7 +281,7 @@
                 var myChart2 = new Chart(ctx2, {
                     type: 'pie',
                     data: {
-                        labels: ["FALLA", "Paro Mtto. Lectra", "Paro Mtto. IT","Paro Mtto."],
+                        labels: ["FALLA(min)", "Paro Mtto. Lectra(min)", "Paro Mtto. IT(min)","Paro Mtto.(min)"],
                         datasets: [{
                             label: "Tiempo Total",
                             data: [0,0,0,0],
@@ -376,7 +315,7 @@
                 var myChart3 = new Chart(ctx3, {
                     type: 'pie',
                     data: {
-                        labels: ["Comida.","Enfermeria","Paro por 5's","Cambio de rollo","Impresion en proceso", "Cabezal marcando.","Baño","Esperando  MO"],
+                        labels: ["Comida(min)","Enfermeria(min)","Paro por 5's(min)","Cambio de rollo(min)","Impresion en proceso(min)", "Cabezal marcando(min)","Baño(min)","Esperando  MO(min)"],
                         datasets: [{
                             label: "Tiempo Total",
                             data: [0,0,0,0,0,0,0,0],
@@ -441,10 +380,9 @@
                     .done(function( response ) {
                         //alert(response);
                          myChart.data.showAllTooltips = false;
-                        myChart.data.labels=["Activo ("+response[0]+")", "Mantenimiento ("+response[1]+")", "Operador ("+response[2]+")"];
+                        myChart.data.labels=["Activo ("+response[0]+"min)", "Mantenimiento ("+response[1]+"min)", "Operador ("+response[2]+"min)"];
                         myChart.data.datasets[0].data=[response[0],response[1],response[2]];
                         myChart.update();
-												$('#tabletotal').html("<td>"+Desde+"</td><td>"+Hasta+"</td><td>"+response[0]+"</td><td>"+response[1]+"</td><td>"+response[2]+"</td>");
                         // $(".loader").hide(4000);
                     });
                    
@@ -461,10 +399,9 @@
                     })
                     .done(function( response ) {
                         //alert(response);
-                        myChart2.data.labels=["FALLA("+response[0]+")", "Paro Mtto. Lectra ("+response[1]+")", "Paro Mtto. IT ("+response[2]+")","Paro Mtto ("+response[3]+")"];
+                        myChart2.data.labels=["FALLA("+response[0]+"min)", "Paro Mtto. Lectra ("+response[1]+"min)", "Paro Mtto. IT ("+response[2]+"min)","Paro Mtto ("+response[3]+"min)"];
                         myChart2.data.datasets[0].data=[response[0],response[1],response[2],response[3]];
                         myChart2.update();
-												$('#tablemantenimiento').html("<td>"+Desde+"</td><td>"+Hasta+"</td><td>"+response[0]+"</td><td>"+response[1]+"</td><td>"+response[2]+"</td><td>"+response[3]+"</td>");
                         // $(".loader").hide(4000);
                     });
                     
@@ -480,11 +417,10 @@
                         }
                     })
                     .done(function( response ) {
-                        //alert(response);
-                        myChart3.data.labels=["Comida ("+response[0]+")","Enfermeria ("+response[1]+")","Paro por 5's ("+response[2]+")","Cambio de rollo ("+response[3]+")","Impresion en proceso ("+response[4]+")", "Cabezal marcando ("+response[5]+")","Baño ("+response[6]+")","Esperando  MO ("+response[7]+")"]
+                        //alert(response[0]);
+                        myChart3.data.labels=["Comida ("+response[0]+"min)","Enfermeria ("+response[1]+"min)","Paro por 5's ("+response[2]+"min)","Cambio de rollo ("+response[3]+"min)","Impresion en proceso ("+response[4]+"min)", "Cabezal marcando ("+response[5]+"min)","Baño ("+response[6]+"min)","Esperando  MO ("+response[7]+"min)"]
                         myChart3.data.datasets[0].data=[response[0],response[1],response[2],response[3],response[4],response[5],response[6],response[7]];
                         myChart3.update();
-												$('#tableoperador').html("<td>"+Desde+"</td><td>"+Hasta+"</td><td>"+response[0]+"</td><td>"+response[1]+"</td><td>"+response[2]+"</td><td>"+response[3]+"</td><td>"+response[4]+"</td><td>"+response[5]+"</td><td>"+response[6]+"</td><td>"+response[7]+"</td>");
                         // $(".loader").hide(4000);
                     });
 

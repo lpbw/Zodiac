@@ -168,7 +168,7 @@ function MM_jumpMenu2(targ,selObj,restore,razon){ //v3.0
                             
                                         
 	<?	  
-	$consulta  = "SELECT id_cut, inicio, fin, razon_id, id, razon,autorized  FROM cut_pause where id_cut=$cut_id order by inicio";
+	$consulta  = "SELECT id_cut, inicio, fin, razon_id, id, razon,autorized,TIMESTAMPDIFF(MINUTE, inicio, now()) as d1  FROM cut_pause where location_id=$locationU  and autorized=0 order by inicio"; //id_cut=$cut_id BUSCA PAROS NO AUTORIZADOS
 	$resultado = mysql_query($consulta) or die("La consulta fall&oacute;P1: " . mysql_error());
 	while($res=mysql_fetch_assoc($resultado))
 	{	
@@ -203,9 +203,11 @@ function MM_jumpMenu2(targ,selObj,restore,razon){ //v3.0
                                 <input name="motivo" type="text" class="form-control" id="motivo"
                                        value="<? echo $res['razon']?>" size="20" maxlength="50" onchange=""/><!-guardaMotivo('parent',this, '<? echo $res['id']?>');->
                               </span></td>
-							  <td><? if($res['razon_id']=="3" && $res['autorized']=="0"){?>
-                                <a href="autorizar.php?pausa_id=<? echo $res['id'];?>&amp;razon=<? echo $res['razon_id'];?>"><img src="images/mante.png" width="29" height="29" border="0" /></a>
-                                <? }?></td>
+							  <td>
+							      <? if($res['razon_id']=="3" && $res['autorized']=="0"){?>
+							    <a href="autorizar.php?pausa_id=<? echo $res['id'];?>&razon=<? echo $res['razon_id'];?>"><img src="images/mante.png" width="29" height="29" border="0" /></a><? }else if($res['autorized']!="0" || $res['d1']<=5){?><img src="images/bien.png" width="29" height="29" />
+						      <? }?>
+							  </td>
 							</tr>
                                        <? }?>
 									   </tbody>                     
@@ -280,7 +282,7 @@ function MM_jumpMenu2(targ,selObj,restore,razon){ //v3.0
                             
                                         
 	<?	  
-	$consulta  = "SELECT id, inicio, fin, razon_id,  razon, autorized,TIMESTAMPDIFF(MINUTE, inicio, now()) as d1  FROM cut_pause where location_id=$locationU and fin is null and id_cut=0";
+	$consulta  = "SELECT id, inicio, fin, razon_id,  razon, autorized,TIMESTAMPDIFF(MINUTE, inicio, now()) as d1  FROM cut_pause where location_id=$locationU  and autorized=0 ";//and fin is null and id_cut=0
 	$resultado = mysql_query($consulta) or die("La consulta fall&oacute;P1: " . mysql_error());
 	while($res=mysql_fetch_assoc($resultado))
 	{	

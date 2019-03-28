@@ -23,48 +23,38 @@
                 $Filtro1 = "";
             }
             else {
-                $Filtro1 = "AND cp.location_id=$Maquina ";
+                $Filtro1 = "AND location_id=$Maquina ";
             }
 
             //Cuando filtra por turno
             if ($Turno==0)
             {
-                $Filtro2 = "AND cp.turno<>4";
+                $Filtro2 = "AND turno<>4";
             }
             else {
-                $Filtro2 = "AND cp.turno=$Turno";
+                $Filtro2 = "AND turno=$Turno";
             }
 
-            $QueryTiempos = "SELECT timestampdiff(minute,cp.inicio,cp.fin) AS tiempo,dt.grupo AS grupo FROM cut_pause cp INNER JOIN down_time_reason dt ON cp.razon_id=dt.id WHERE DATE_FORMAT(inicio,'%Y-%m-%d')>='$Desde' AND DATE_FORMAT(inicio,'%Y-%m-%d')<='$Hasta' AND cp.fin<>'' ".$Filtro1.$Filtro2;
-            $ResultadoTeimpos = mysql_query($QueryTiempos) or die("Error en Tiempos $QueryTiempos".mysql_error());
-            
-            while ($ResTiempos = mysql_fetch_assoc($ResultadoTeimpos))
-            {
-                $Grupo = $ResTiempos['grupo'];
+            /**Obtener tiempo activo  tabla cierre de turno*/
+            $QueryTiempos = "SELECT SUM(tiempo) AS tiempo FROM cierre_turnos WHERE tipo=99 AND DATE_FORMAT(fecha,'%Y-%m-%d')>='$Desde' AND DATE_FORMAT(fecha,'%Y-%m-%d')<='$Hasta' ".$Filtro1.$Filtro2;
+            $ResultadoTiempos = mysql_query($QueryTiempos) or die("Error en Tiempos $QueryTiempos".mysql_error());
+            $ResulTiempos = mysql_fetch_assoc($ResultadoTiempos);
+            $TiempoActivo = str_replace(",","",$ResTiempos['tiempo']);
+            //$TiempoActivo = $ResTiempos['tiempo'];
 
-                switch ($Grupo)
-                {
-                    case 0:
-                        $TiempoActivo = $TiempoActivo+$ResTiempos['tiempo'];
-                    break;
-                    
-                    case 1:
-                        $TiempoMtto = $TiempoMtto+$ResTiempos['tiempo'];
-                    break;
+            /**Tiempos mantenimiento  obtenidos de la tabla  cut_pause*/
+            $QueryMtto = "SELECT SUM(TIMESTAMPDIFF(minute,cp.inicio,cp.fin)) AS tiempo FROM cut_pause cp INNER JOIN down_time_reason dt ON cp.razon_id=dt.id WHERE dt.grupo=1 AND DATE_FORMAT(cp.inicio,'%Y-%m-%d') BETWEEN '$Desde' AND '$Hasta' ".$Filtro1.$Filtro2;
+            $ResultadoMtto = mysql_query($QueryMtto) or die("Error en Tiempos $QueryMtto".mysql_error());
+            $ResulMtto = mysql_fetch_assoc($ResultadoMtto);
+            $TiempoMtto = str_replace(",","",$ResMtto['tiempo']);
+            //$TiempoMtto = $ResMtto['tiempo'];
 
-                    case 2:
-                        $TiempoOperador = $TiempoOperador+$ResTiempos['tiempo'];
-                    break;
-
-                    case 3:
-                        $TiempoOperador = $TiempoOperador+$ResTiempos['tiempo'];
-                    break;
-
-                    default:
-                        # code...
-                    break;
-                }
-            }
+            /**Tiempos operador  obtenidos de la tabla  cut_pause*/
+            $QueryOperador = "SELECT SUM(TIMESTAMPDIFF(minute,cp.inicio,cp.fin)) AS tiempo FROM cut_pause cp INNER JOIN down_time_reason dt ON cp.razon_id=dt.id WHERE dt.grupo BETWEEN 2 AND 3 AND DATE_FORMAT(cp.inicio,'%Y-%m-%d') BETWEEN '$Desde' AND '$Hasta' ".$Filtro1.$Filtro2;
+            $ResultadoOperador = mysql_query($QueryOperador) or die("Error en Tiempos $QueryOperador".mysql_error());
+            $ResulOperador = mysql_fetch_assoc($ResultadoOperador);
+            $TiempoOperador = str_replace(",","",$ResulOperador['tiempo']);
+            // = $ResulOperador['tiempo'];
             
             $Datos = array($TiempoActivo, $TiempoMtto, $TiempoOperador);
             
@@ -80,52 +70,50 @@
             $Mtto = 0;
 
             //Cuando filtra por maquina
-            if ($Maquina==0)
+            if ($Maquina!=0)
             {
-                $Filtro1 = "";
-            }
-            else {
                 $Filtro1 = "AND location_id=$Maquina ";
             }
 
             //Cuando filtra por turno
             if ($Turno==0)
             {
-                $Filtro2 = "AND turno<>4";
+                $Filtro2 = "AND cut_pause.turno<>4";
             }
             else {
-                $Filtro2 = "AND turno=$Turno";
+                $Filtro2 = "AND cut_pause.turno=$Turno";
             }
 
-            $QueryMtto = "SELECT cp.id,timestampdiff(minute,cp.inicio,cp.fin) AS tiempo,razon_id,dt.reason,dt.grupo FROM cut_pause cp INNER JOIN down_time_reason dt ON cp.razon_id=dt.id WHERE dt.grupo=1 AND DATE_FORMAT(inicio,'%Y-%m-%d')>='$Desde' AND DATE_FORMAT(inicio,'%Y-%m-%d')<='$Hasta' AND cp.fin<>'' ".$Filtro1.$Filtro2;
+            $QueryMtto = "SELECT cut_pause.razon_id,FORMAT(TIME_TO_SEC(timediff(fin, inicio))/60,0) as tiempo FROM `cut_pause` inner join down_time_reason on cut_pause.razon_id=down_time_reason.id inner join locations on cut_pause.location_id=locations.id left outer join users on cut_pause.autorized_by=users.id where down_time_reason.grupo=1 AND DATE_FORMAT(inicio, '%Y-%m-%d')>='$Desde' and DATE_FORMAT(inicio, '%Y-%m-%d')<='$Hasta' AND cut_pause.fin<>'' ".$Filtro1.$Filtro2." ORDER BY cut_pause.id";
             $ResultadoMtto = mysql_query($QueryMtto) or die("Error en Mtto $QueryMtto".mysql_error());
 
             while ($ResMtto = mysql_fetch_assoc($ResultadoMtto))
             {
-               $Tipo = $ResMtto['razon_id'];
-
-               switch ($Tipo)
-               {
+                $tiempo = str_replace(",","",$ResMtto['tiempo']);
+                $Tipo = $ResMtto['razon_id'];
+                
+                switch ($Tipo)
+                {
                     case 3:
-                       $Falla = $Falla+$ResMtto['tiempo'];
+                       $Falla = $Falla+$tiempo;
                     break;
 
                     case 16:
-                       $MttoLectra = $MttoLectra+$ResMtto['tiempo'];
+                       $MttoLectra = $MttoLectra+$tiempo;
                     break;
 
                     case 17:
-                       $MttoIt = $MttoIt+$ResMtto['tiempo'];
+                       $MttoIt = $MttoIt+$tiempo;
                     break;
 
                     case 18:
-                       $Mtto = $Mtto+$ResMtto['tiempo'];
+                       $Mtto = $Mtto+$tiempo;
                     break;
 
                     default:
                        # code...
                     break;
-               }
+                }
             }
             
             $Datos = array($Falla, $MttoLectra, $MttoIt,$Mtto);
@@ -145,74 +133,74 @@
             $EsperandoMo = 0;
 
             //Cuando filtra por maquina
-            if ($Maquina==0)
+            if ($Maquina!=0)
             {
-                $Filtro1 = "";
-            }
-            else {
                 $Filtro1 = "AND location_id=$Maquina ";
             }
 
             //Cuando filtra por turno
             if ($Turno==0)
             {
-                $Filtro2 = "AND turno<>4";
+                $Filtro2 = "AND cut_pause.turno<>4";
             }
             else {
-                $Filtro2 = "AND turno=$Turno";
+                $Filtro2 = "AND cut_pause.turno=$Turno";
             }
 
-            $QuerySetup = "SELECT cp.id,timestampdiff(minute,cp.inicio,cp.fin) AS tiempo,razon_id,dt.reason,dt.grupo FROM cut_pause cp INNER JOIN down_time_reason dt ON cp.razon_id=dt.id WHERE dt.grupo>=2 AND dt.grupo<=3 AND DATE_FORMAT(inicio,'%Y-%m-%d')>='$Desde' AND DATE_FORMAT(inicio,'%Y-%m-%d')<='$Hasta' AND cp.fin<>'' ".$Filtro1.$Filtro2;
+            $QuerySetup = "SELECT cut_pause.razon_id,FORMAT(TIME_TO_SEC(timediff(fin, inicio))/60,0) as tiempo FROM `cut_pause` inner join down_time_reason on cut_pause.razon_id=down_time_reason.id inner join locations on cut_pause.location_id=locations.id left outer join users on cut_pause.autorized_by=users.id where DATE_FORMAT(inicio, '%Y-%m-%d')>='$Desde' and DATE_FORMAT(inicio, '%Y-%m-%d')<='$Hasta' AND cut_pause.fin<>'' ".$Filtro1.$Filtro2." ORDER BY cut_pause.id";
             $ResultadoSetup = mysql_query($QuerySetup) or die("Error en Setup $QuerySetup".mysql_error());
-
+            $con=0;
             while ($ResSetup = mysql_fetch_assoc($ResultadoSetup))
             {
-               $Tipo = $ResSetup['razon_id'];
-
-               switch ($Tipo)
-               {
+                /**Se agrego el str_replace porque se perdian los valores del tiempo ya que traian coma y los tomaba como string */
+                $tiempo = str_replace(",","",$ResSetup['tiempo']);
+                $Tipo = $ResSetup['razon_id'];
+                $con++;
+                switch ($Tipo)
+                {
                     case 1:
-                       $Comida = $Comida+$ResSetup['tiempo'];
+                       $Comida = $Comida+$tiempo;
                     break;
 
                     case 4:
-                       $Enfermeria = $Enfermeria+$ResSetup['tiempo'];
+                       $Enfermeria = $Enfermeria+$tiempo;
                     break;
 
                     case 7:
-                       $Paro5s = $Paro5s+$ResSetup['tiempo'];
+                       $Paro5s = $Paro5s+$tiempo;
                     break;
 
                     case 8:
-                       $CambioRollo = $CambioRollo+$ResSetup['tiempo'];
+                       $CambioRollo = $CambioRollo+$tiempo;
                     break;
 
                     case 11:
-                       $Impresion = $Impresion+$ResSetup['tiempo'];
+                       $Impresion = $Impresion+$tiempo;
                     break;
 
                     case 20:
-                       $Cabezal = $Cabezal+$ResSetup['tiempo'];
+                       $Cabezal = $Cabezal+$tiempo;
                     break;
 
                     case 21:
-                       $Banio = $Banio+$ResSetup['tiempo'];
+                       $Banio = $Banio+$tiempo;
                     break;
 
                     case 23:
-                       $EsperandoMo = $EsperandoMo+$ResSetup['tiempo'];
+                       $EsperandoMo = $EsperandoMo+$tiempo;
                     break;
 
                     default:
                        # code...
                     break;
-               }
+                }
+                //echo $con."_".$Minutos."\n";
             }
 
             $Datos = array($Comida, $Enfermeria, $Paro5s,$CambioRollo,$Impresion,$Cabezal,$Banio,$EsperandoMo);
             
             echo json_encode($Datos);
-            //echo $Tipo;
+        //echo $QuerySetup;
         break;
 
         default:

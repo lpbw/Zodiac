@@ -264,7 +264,7 @@ if($_POST['buscar']!="")
 		$operador_b="and cuts.prod_user_id='".$_POST['operador']."'";
 	else
 		$operador_b="";	
-	$consulta="SELECT mo, cn, nombre,name, number, lote, fiber_type, FORMAT(retail_length/36,2) as retail_length, FORMAT(guaranteed_length/36,2) as guaranteed_length,FORMAT(balance/36,2) as balance, FORMAT(length_consumed/36,2) as length_consumed, FORMAT(length_defect/36,2) as length_defect,  hardware_init, hardware_end, status  ,cuts.id as cuts_id , users.first_name as nombre2 FROM cuts inner join cut_type on cut_type.id=cuts.id_cut_type inner join locations on cuts.location_assigned_id=locations.id left outer join location_capacities on cuts.number_position=location_capacities.id inner join rolls on rolls.id=cuts.roll_id inner join roll_fibers on rolls.fiber_id=roll_fibers.fiber_type inner join users on users.id=cuts.prod_user_id where cuts.deleted_at is null  $lote_b $fibra_b $fecha_b $mo_b $cut_b $operador_b order by hardware_end desc";
+	$consulta="SELECT mo, cn, nombre,name, number, lote, fiber_type, FORMAT(retail_length,2) as retail_length, FORMAT(guaranteed_length/36,2) as guaranteed_length,FORMAT(balance/36,2) as balance, FORMAT(length_consumed/36,2) as length_consumed, FORMAT(length_defect/36,2) as length_defect,  hardware_init, hardware_end, status  ,cuts.id as cuts_id , users.first_name as nombre2 FROM cuts inner join cut_type on cut_type.id=cuts.id_cut_type inner join locations on cuts.location_assigned_id=locations.id left outer join location_capacities on cuts.number_position=location_capacities.id inner join rolls on rolls.id=cuts.roll_id inner join roll_fibers on rolls.fiber_id=roll_fibers.fiber_type inner join users on users.id=cuts.prod_user_id where cuts.deleted_at is null  $lote_b $fibra_b $fecha_b $mo_b $cut_b $operador_b order by hardware_end desc";
 	//echo"$consulta";
 	$resultado = mysql_query($consulta) or die("La consulta fall&oacute;P1: " . mysql_error());
 	while($res=mysql_fetch_assoc($resultado))
@@ -280,8 +280,8 @@ if($_POST['buscar']!="")
                                     <td><? echo $res['number']?></td>
                                     <td><? echo $res['lote']?></td>
 									<td><? echo $res['fiber_type']?></td>
-                                    <td><? echo $res['retail_length']?></td>
                                     <td><? echo $res['guaranteed_length']?></td>
+                                    <td><? echo $res['retail_length']?></td>
                                     <td><? echo $res['balance']?> </td>
 									<td><? echo $res['length_consumed']?></td>
 									<td><? echo $res['length_defect']?></td>

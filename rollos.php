@@ -23,7 +23,7 @@
     else{
     $filtro=0;
     }*/
-echo "tipo: " .$tipoU;
+//echo "tipo: " .$tipoU;
 
 ?>
 <!doctype html>
@@ -257,7 +257,7 @@ echo "tipo: " .$tipoU;
                                     $consulta .= "storage_id=$storage,";
                                     $consulta .= "Update_by='$idU'";
                                     $consulta .= "WHERE id=$id";
-									echo"$consulta";
+									//echo"$consulta";
                                     $resultado = mysql_query($consulta) or die("Error en operacion1: $consulta " . mysql_error());
                             
                 
@@ -311,7 +311,7 @@ echo "tipo: " .$tipoU;
                                 $consulta .= "storage_id=$storage,";
                                 $consulta .= "Update_by='$idU' ";
                                 $consulta .= "WHERE id=$id";
-								echo"$consulta";
+								//echo"$consulta";
                                 //$pulgadas=$remaining_inches;
                                // $guaranteed=$guaranteed_length;
                                 $resultado = mysql_query($consulta) or die("Error en operacion1: $consulta " . mysql_error());
@@ -568,6 +568,11 @@ echo "tipo: " .$tipoU;
                 alert("No se puede  estar en maquina y en almacen");
                 document.form1.lote.focus();
                 return false;
+            } else if((document.form1.location_anterior.value=="0" ) && (document.form1.state_id.value=="4" || document.form1.state_id.value=="5" || document.form1.state_id.value==""))
+            {
+                alert("Debes cambiar estatus a En Produccion");
+                document.form1.lote.focus();
+                return false;
             }
         }
 
@@ -696,6 +701,7 @@ echo "tipo: " .$tipoU;
               <div class="col-sm-6 col-md-4 col-lg-4">
                                 <label for="location_id">Maquina:</label>
                                 
+                                <input name="location_anterior" type="hidden" id="location_anterior">
                                 <select class="form-control" id="location_id" name="location_id" onChange="buscaPos(location_id.value, '0');">
                                   <option value="0" selected="selected">--Selecciona Lugar--</option>
                                   <?	  
@@ -974,6 +980,7 @@ where $buscarr  rolls.deleted_at is null and rolls.state_id<4 $orden";
 	document.form1.guaranteed_length.value='<? echo"$res8[4]";?>';
 	document.form1.remaining_inches.value='<? echo"$res8[5]";?>';
 	document.form1.location_id.value='<? echo"$res8[6]";?>';
+	document.form1.location_anterior.value='<? echo"$res8[6]";?>';
 	buscaPos('<? echo"$res8[6]";?>','<? echo"$res8[7]";?>');
 	
 	document.form1.state_id.value='<? echo"$res8[8]";?>';

@@ -191,10 +191,11 @@
                             Turno:
                         </label>
                         <select class="form-control" id="turno" name="turno">
-                            <option value="0" selected="selected">--Todos--</option>
-                            <option value="1" >Primer Turno</option>
-                            <option value="2" >Segundo Turno</option>
-                            <option value="3" >Tercer Turno</option>
+                            <option value="0" selected="selected">--Selecciona Turno--</option>
+                            <option value="1" >1</option>
+                            <option value="2" >2</option>
+                            <option value="3" >3</option>
+                            <option value="4" >4</option>
                         </select>
                     </div>
                     
@@ -417,7 +418,8 @@
                         }
                     })
                     .done(function( response ) {
-                        //alert(response[0]);
+                        //alert(response);
+                        //console.log(response);
                         myChart3.data.labels=["Comida ("+response[0]+"min)","Enfermeria ("+response[1]+"min)","Paro por 5's ("+response[2]+"min)","Cambio de rollo ("+response[3]+"min)","Impresion en proceso ("+response[4]+"min)", "Cabezal marcando ("+response[5]+"min)","Baño ("+response[6]+"min)","Esperando  MO ("+response[7]+"min)"]
                         myChart3.data.datasets[0].data=[response[0],response[1],response[2],response[3],response[4],response[5],response[6],response[7]];
                         myChart3.update();

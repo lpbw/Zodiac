@@ -71,20 +71,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
               <td><? echo $res['inicio'];?></td>
               <td><? echo $res['fin'];?></td>
               <td>
-                  <?	  
-							$consulta2  = "SELECT * FROM down_time_reason order by id";
-							$resultado2 = mysql_query($consulta2) or die("La consulta fall&oacute;P1: " . mysql_error());
-							$count=1;
-							while(@mysql_num_rows($resultado2)>=$count)
-							{
-								$res2=mysql_fetch_row($resultado2);
-								if($res['razon_id']==$res2[0])
-								echo"$res2[1]";
-								
-								$count=$count+1;
-							}	
-		
-										?>
+                  <? echo $res['reason'];?>
              </td>
               <td><span class="col-sm-6 col-md-4 col-lg-4">
                <? echo $res['razon']?>

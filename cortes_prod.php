@@ -99,7 +99,7 @@ $.colorbox({iframe2:true,href:"editar_pausa_prod.php?id="+id,width:"820", height
 		
     </script>
 <?
-$dia_semana=date(N)+1;
+$dia_semana=date(N);
 		if($dia_semana==8)
 			$dia_semana=1;
 			

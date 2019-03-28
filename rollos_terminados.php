@@ -316,11 +316,11 @@ function sele_bodega(valor)
 	<?	 
 		$consulta  = "SELECT rolls.id,  lote, fiber_type, retail_length, FORMAT(guaranteed_length/36,2), FORMAT((guaranteed_length-remaining_inches)/36,2), FORMAT(remaining_inches/36,2), locations.name, location_capacities.number, roll_states.description, storage.name, rolls.state_id, u.first_name  FROM rolls inner join roll_fibers on rolls.fiber_id=roll_fibers.fiber_type inner join roll_states on rolls.state_id=roll_states.id
 left outer join  location_capacities on location_capacities.id=rolls.location_slot  
-left outer join locations on location_capacities.id_location=locations.id 
+left outer join locations on rolls.location_id=locations.id 
 left outer join storage on storage.id=rolls.storage_id
 left outer join users u on rolls.finished_by=u.id
 where rolls.deleted_at  is null and state_id>=4 
-order by finished_at limit 0, 30";
+order by finished_at desc limit 0, 30";
 
 	if($_POST['buscar']=="Buscar"){
 	$lote=$_POST['lot'];
@@ -328,7 +328,7 @@ order by finished_at limit 0, 30";
 	   if($lote!=""){
 	     $consulta  = "SELECT rolls.id,  lote, fiber_type, retail_length, FORMAT(guaranteed_length/36,2), FORMAT((guaranteed_length-remaining_inches)/36,2), FORMAT(remaining_inches/36,2), locations.name, location_capacities.number, roll_states.description, storage.name, rolls.state_id, u.first_name  FROM rolls inner join roll_fibers on rolls.fiber_id=roll_fibers.fiber_type inner join roll_states on rolls.state_id=roll_states.id
 left outer join  location_capacities on location_capacities.id=rolls.location_slot  
-left outer join locations on location_capacities.id_location=locations.id 
+left outer join locations on rolls.location_id=locations.id 
 left outer join storage on storage.id=rolls.storage_id
 left outer join users u on rolls.finished_by=u.id
 where rolls.deleted_at  is null and state_id>=4 
@@ -339,7 +339,7 @@ order by finished_at limit 0, 30";
 if($fibra!=""){
 	     $consulta  = "SELECT rolls.id,  lote, fiber_type, retail_length, FORMAT(guaranteed_length/36,2), FORMAT((guaranteed_length-remaining_inches)/36,2), FORMAT(remaining_inches/36,2), locations.name, location_capacities.number, roll_states.description, storage.name, rolls.state_id, u.first_name  FROM rolls inner join roll_fibers on rolls.fiber_id=roll_fibers.fiber_type inner join roll_states on rolls.state_id=roll_states.id
 left outer join  location_capacities on location_capacities.id=rolls.location_slot  
-left outer join locations on location_capacities.id_location=locations.id 
+left outer join locations on rolls.location_id=locations.id 
 left outer join storage on storage.id=rolls.storage_id
 left outer join users u on rolls.finished_by=u.id
 where rolls.deleted_at  is null and state_id>=4 

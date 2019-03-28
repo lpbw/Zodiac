@@ -50,9 +50,9 @@
                     <a href="terminadas.php"><i class="fa  fa-fw"></i>Ordenes Terminadas</a>                         </li>
 					 <li>
                     <a href="down_time_report.php"><i class="fa  fa-fw"></i>Reporte de Tiempos Muertos</a>                         </li>  
-                            <li>
-                            <a href="reporteejecutivo.php"><i class="fa  fa-fw"></i>Reporte Ejecutivo</a>                         </li>  
-                            
+					<li>
+                    <a href="reporteejecutivo.php"><i class="fa  fa-fw"></i>Reporte Ejecutivo</a>                         </li>  
+					 
                      <? 
 					 
 					 if($tipoU=="1"){?>

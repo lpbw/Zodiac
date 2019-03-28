@@ -6,7 +6,7 @@ $idU=$_SESSION['idU'];
 $nombreU=$_SESSION['nombreU'];
 $tipoU=$_SESSION['tipoU'];
 $locationU=$_SESSION['location'];
-$dia_semana=date(N)+1;
+$dia_semana=date(N);
 if($dia_semana==8)
 	$dia_semana=1;
 	// buscar condicion si es despues de las 12 y antes de las 12:30 tomar el dia anterior
@@ -114,7 +114,7 @@ body {
                            
               <div class="col-lg-12 table-responsive" id="d_pendientes">
 			  
-                                                                    <table class="table table-striped table-condensed grid">
+                                                                    <table class="table  table-condensed grid">
                             <thead>
 							<tr>
                             <th width="7%" height="40"><span class="style11">Lectra</span></th>
@@ -140,7 +140,7 @@ body {
                             </div></th>
                             </tr>
                             </thead>
-                            <tbody>
+                           <!-- <tbody>-->
 
                             
                                         
@@ -153,6 +153,8 @@ body {
 	while($res=mysql_fetch_assoc($resultado))
 	{	
 		$bpass=$res['estatus'];
+		$pausa_actual_tipo="0";
+		$color_linea="";
 		$consulta4  = "SELECT sum(TIMESTAMPDIFF(MINUTE, inicio, fin)) as d1  FROM cut_pause where location_id=".$res['id']." and razon_id=1 and fin is not null and DATE(inicio)=DATE(now()) and turno=$turno group by location_id";
 		//echo $consulta4;
 		$resultado4 = mysql_query($consulta4) or die("La consulta fall&oacute;P1: " . mysql_error());
@@ -220,7 +222,7 @@ body {
 		}
 		//$tiempo_activo_total=$tiempo_activo_total-$tiempo_paro-$tiempo_comida; // falta sumar orden actual abierta tiempo bueno y restar el muerto actual de la orden
 		
-		$consulta2  = "SELECT cuts.id,mo, cn, cut_type.nombre, length_measured, locations.name, location_capacities.number, rolls.lote, roll_fibers.fiber_type, rolls.remaining_inches, cuts.status, cuts.parte,cuts.length_consumed, cuts.length_defect,DATE_FORMAT(date_lote, '%m-%d-%Y'), programas.nombre as prog, TIMESTAMPDIFF(MINUTE, cuts.hardware_init, now()) as d1, TIMESTAMPDIFF(MINUTE, cuts.hardware_init, cuts.hardware_end) as d2, cuts.hardware_init, cuts.hardware_end, users.first_name, users.last_name  FROM cuts inner join cut_type on cut_type.id=cuts.id_cut_type inner join locations on cuts.location_assigned_id=locations.id left outer join location_capacities on cuts.number_position=location_capacities.id inner join rolls on rolls.id=cuts.roll_id inner join roll_fibers on cuts.fiber_id=roll_fibers.fiber_type left outer join programas on cuts.id_programa=programas.id left outer join users on locations.logged=users.id where cuts.deleted_at is null and cuts.location_assigned_id=".$res['id']." and cuts.orden=1 and cuts.status<>0 ";
+		$consulta2  = "SELECT cuts.id,mo, cn, cut_type.nombre, length_measured, locations.name, location_capacities.number, rolls.lote, roll_fibers.fiber_type, rolls.remaining_inches, cuts.status, cuts.parte,cuts.length_consumed, cuts.length_defect,DATE_FORMAT(date_lote, '%m-%d-%Y'), programas.nombre as prog, TIMESTAMPDIFF(MINUTE, cuts.hardware_init, now()) as d1, TIMESTAMPDIFF(MINUTE, cuts.hardware_init, cuts.hardware_end) as d2, cuts.hardware_init, cuts.hardware_end, users.first_name, users.last_name, locations.id as id_loc  FROM cuts inner join cut_type on cut_type.id=cuts.id_cut_type inner join locations on cuts.location_assigned_id=locations.id left outer join location_capacities on cuts.number_position=location_capacities.id inner join rolls on rolls.id=cuts.roll_id inner join roll_fibers on cuts.fiber_id=roll_fibers.fiber_type left outer join programas on cuts.id_programa=programas.id left outer join users on locations.logged=users.id where cuts.deleted_at is null and cuts.location_assigned_id=".$res['id']." and cuts.orden=1"; // and cuts.status<>0 
 	
 		//echo"$consulta2";
 		$resultado2 = mysql_query($consulta2) or die("La consulta fall&oacute;P1: " . mysql_error());
@@ -232,16 +234,29 @@ body {
 			{
 				$estatus="INACTIVO";
 				$color="#FF0000";
+				$color2="#3498DB";
+				$style="2";
 			}
 			else if($res2['status']==1)
 			{
 				$estatus="EN PROCESO";
 				$color="#33FF00";
+				if($res2['first_name']=="")
+					$color2="#666666";
+				else
+					$color2="#3498DB";
+				
+				$style="2";
 			}
 			else
 			{
 				$estatus="EN PAUSA";
 				$color="#FFFF00";
+				if($res2['first_name']=="")
+					$color2="#666666";
+				else
+					$color2="#3498DB";
+				$style="2";
 			}
 			
 			$consulta4  = "SELECT sum(TIMESTAMPDIFF(MINUTE, inicio, fin)) as d1  FROM cut_pause where id_cut=".$res2['id']."  and fin is not null group by id_cut";
@@ -253,14 +268,23 @@ body {
 				//echo"pausa=".$pausa;
 			}	
 			
-			$consulta4  = "SELECT TIMESTAMPDIFF(MINUTE, inicio, now()) as d1  FROM cut_pause where id_cut=".$res2['id']."  and fin is null";
+			$consulta4  = "SELECT TIMESTAMPDIFF(MINUTE, inicio, now()) as d1, razon_id  FROM cut_pause where location_id=".$res2['id_loc']." and  fin is null";//id_cut=".$res2['id']."  and
 			$resultado4 = mysql_query($consulta4) or die("La consulta fall&oacute;P1: " . mysql_error());
 			if($res4=mysql_fetch_assoc($resultado4))
 			{
 				$pausa2=$res4['d1']; //pausa actual hasta el momento
+				$pausa_actual_tipo=$res4['razon_id'];
+				if($pausa_actual_tipo=="3" ||$pausa_actual_tipo=="16" ||$pausa_actual_tipo=="17" ||$pausa_actual_tipo=="18")
+				{
+					$color2="#FFCC33";
+					$style="10";
+				}
 				//echo"pausa2=".$pausa2;
 			}else
+			{
 				$pausa2=0;
+				
+			}
 			/*if($res2['hardware_init']=='')
 			{
 				//echo"entra0".$res2['hardware_init'];
@@ -291,27 +315,27 @@ body {
 			}
 			$tiempo_activo_total=$total_turno-$tiempo_comida-$tiempo_paro-$tiempo_paro_parcial-$tiempo_paro_parcial_comida;
 		?>
-							<tr>
-                                    <td height="30" class="style2"><span class="style6"><? echo $res['name']?></span></td>
+							<tr  bgcolor="<? echo"$color2";?>">
+                                    <td height="30" class="style<? echo"$style";?>"><span class="style6"><? echo $res['name']?></span></td>
                                  
-                                    <td class="style2"><div align="center"><span class="style6"><? echo $estatus?></span></div></td>
-                                    <td class="style2"><table width="100%" border="0" bgcolor="#FF0000">
+                                    <td class="style<? echo"$style";?>"><div align="center"><span class="style6"><? echo $estatus?></span></div></td>
+                                    <td class="style<? echo"$style";?>"><table width="100%" border="0" bgcolor="#FF0000">
                                       <tr>
                                         <td height="40" bgcolor="<? echo"$color";?>">&nbsp;</td> 
                                       </tr>
                                     </table></td>
-                                    <td class="style2"><span class="style6"><? echo $res['first_name'] ?> <? echo $res['last_name'] ?></span></td>
-                                    <td class="style2"><span class="style6"><? if($bpass==0){?><img src="images/bypass.png" width="50" height="32" /><? }?><? echo $res2['mo']?></span></td>
+                                    <td class="style<? echo"$style";?>"><span class="style6"><? echo $res['first_name'] ?> <? echo $res['last_name'] ?></span></td>
+                                    <td class="style<? echo"$style";?>"><span class="style6"><? if($bpass==0){?><img src="images/bypass.png" width="50" height="32" /><? }?><? echo $res2['mo']?></span></td>
 
-                                    <td class="style2"><span class="style6"><? echo $res2['parte']?> / <? echo $res2['prog']?></span></td>
+                                    <td class="style<? echo"$style";?>"><span class="style6"><? echo $res2['parte']?> / <? echo $res2['prog']?></span></td>
                                 
 
 
-                                    <td class="style2"><div align="right"><span class="style6"><? echo $tiempo_activo_total?> MIN</span></div></td>
-                                    <td class="style2"><div align="right"><span class="style6"><? echo $tiempo_activo_mo?> MIN</span></div></td>
-                                    <td class="style2"><div align="right"><span class="style6"><? echo $tiempo_muerto?> MIN</span></div></td>
-							        <td class="style2"><div align="right"><span class="style6"><? echo $tiempo_comida?> MIN</span></div></td>
-							        <td class="style2"><div align="right"><span class="style6"><? echo $tiempo_paro?> MIN</span></div></td>
+                                    <td class="style<? echo"$style";?>"><div align="right"><span class="style6"><? echo $tiempo_activo_total?> MIN</span></div></td>
+                                    <td class="style<? echo"$style";?>"><div align="right"><span class="style6"><? echo $tiempo_activo_mo?> MIN</span></div></td>
+                                    <td class="style<? echo"$style";?>"><div align="right"><span class="style6"><? echo $tiempo_muerto?> MIN</span></div></td>
+							        <td class="style<? echo"$style";?>"><div align="right"><span class="style6"><? echo $tiempo_comida?> MIN</span></div></td>
+							        <td class="style<? echo"$style";?>"><div align="right"><span class="style6"><? echo $tiempo_paro?> MIN</span></div></td>
 					          </tr>
                                     <?  
 						}else
@@ -319,7 +343,7 @@ body {
 							if($autorization!="1"){
 							$tiempo_activo_total=$total_turno-$tiempo_comida-$tiempo_paro-$tiempo_paro_parcial-$tiempo_paro_parcial_comida;
 						?>
-							<tr>
+							<tr >
                                     <td height="40" class="style2"><span class="style6"><? echo $res['name']?> </span></td>
                                  
                                     <td class="style2"><div align="center"><span class="style6">INACTIVO.</span></div></td>
@@ -380,7 +404,7 @@ body {
 					          </tr>
                                     <? }
 					}}?>
-									   </tbody>                     
+									   <!--</tbody> -->                    
                                                     </table>
               </div>
 </form>

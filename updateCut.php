@@ -47,7 +47,7 @@ if(@mysql_num_rows($resultado)>0)
 			$consulta3  =  "update cut_pause set fin=now(), razon_id=$razon, autorized=1 where id=".$pausa_id;
 			$resultado3 = mysql_query($consulta3) or die("Error en operacion1: $consulta3 " . mysql_error());
 			$autorizada="1";
-		}else if($razon!="0" && $autorizada!="0")
+		}else if($razon!="0" && $autorizada!="0")// si tiene una razon autorizada
 		{
 			
 			$consulta3  =  "update cut_pause set fin=now() where id=".$pausa_id;
@@ -87,7 +87,37 @@ if($autorizada!="0")
 			$dif=($length_consumed)-($short_length);
 			
 			$dif_defect=($length_defect)-($short_length_defect);
+			/*if($dif!=0)// si las distancias de los cortos normal y de las actualizaciones no nos las mismas se crea un corto de la resta de la longitud menos el corto
+			{
+				
+				$consulta3  =  "insert into shorts (id_cut, length, type, time,razon_id) values($res2[1], $dif, 0,now(),99);"; //inserta corto
+				$resultado3 = mysql_query($consulta3) or die("Error en operacion3: $consulta3 " . mysql_error());
+				$consulta3  =  "update cuts set  short_length=$length_consumed,prev_short=$length_consumed, short_time_stamp=now(), short_type=0 where id= $res2[1]";// actualiza distancia de corto
+				$resultado3 = mysql_query($consulta3) or die("Error en operacion3: $consulta3 " . mysql_error());
+				$consulta2  = "SELECT mo,id, roll_id, number_position, now(), fiber_id,length_consumed, length_defect,hardware_init, short_length, short_length_defect, short_time_stamp, short_type   FROM cuts where deleted_at is null and location_assigned_id=$location and orden=1 and roll_id<>0"; // manda ordenes que esten en 0,1 o 2
+				$resultado2 = mysql_query($consulta2) or die("La consulta fall&oacute;P1: $consulta2" . mysql_error());
+				if(@mysql_num_rows($resultado2)>0)
+				{
+					$res2=mysql_fetch_row($resultado2);
+				}
+			}*/
+			/*if($dif_defect!=0)// si las distancias de los cortos defecto y de las actualizaciones no nos las mismas se crea un corto de la resta de la longitud menos el corto
+			{
+				
+				$consulta3  =  "insert into shorts (id_cut, length, type, time,razon_id) values($res2[1], $dif_defect, 1,now(),99);"; //inserta corto
+				$resultado3 = mysql_query($consulta3) or die("Error en operacion3: $consulta3 " . mysql_error());
+				$consulta3  =  "update cuts set  short_length_defect=$length_defect, prev_short_defect=$length_defect, short_time_stamp=now(), short_type=1 where id= $res2[1]";// actualiza distancia de corto
+				$resultado3 = mysql_query($consulta3) or die("Error en operacion3: $consulta3 " . mysql_error());
+				$consulta2  = "SELECT mo,id, roll_id, number_position, now(), fiber_id,length_consumed, length_defect,hardware_init, short_length, short_length_defect, short_time_stamp, short_type   FROM cuts where deleted_at is null and location_assigned_id=$location and orden=1 and roll_id<>0"; // manda ordenes que esten en 0,1 o 2
+				$resultado2 = mysql_query($consulta2) or die("La consulta fall&oacute;P1: $consulta2" . mysql_error());
+				if(@mysql_num_rows($resultado2)>0)
+				{
+					$res2=mysql_fetch_row($resultado2);
+				}
+			}*/
 			
+			//$consulta3  =  "update cuts set status=1, updated_at=now() where id= $res2[1]";
+			//$resultado3 = mysql_query($consulta3) or die("Error en operacion1: $consulta " . mysql_error());
 			$init=$res2[8];
 			if($init=="")
 				$init="0000-00-00 00:00:00";
@@ -118,15 +148,14 @@ else
 else
 {
 	// no escribio location 
-	$mensaje="Paro no autorizado ";
-	
+	$mensaje="No location ";
 	$consulta3  =  "insert into trace (valor) values('error=$mensaje' );";
 		$resultado3 = mysql_query($consulta3) or die("Error en operacion p2: $consulta3 " . mysql_error());
 	echo"0,".$mensaje.",0";
 }
 }else
 {
-	$mensaje="No location ";
+	$mensaje="Paro no autorizado ";
 	$consulta3  =  "insert into trace (valor) values('error=$mensaje' );";
 		$resultado3 = mysql_query($consulta3) or die("Error en operacion p2: $consulta3 " . mysql_error());
 	echo"0,".$mensaje.",0";

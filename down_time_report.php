@@ -10,6 +10,7 @@ $desde= $_POST["desde"];
 $hasta= $_POST["hasta"];
 $lugar_b= $_POST["lugar_b"];
 $tipo_b= $_POST["tipo_b"];
+$turno_b= $_POST["turno_b"];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -297,11 +298,12 @@ a {color: #FFFFFF; }
 									<option value="1" <? if($_POST['turno_b']==1)echo"selected";?>>1</option>
 									<option value="2" <? if($_POST['turno_b']==2)echo"selected";?>>2</option>
 									<option value="3" <? if($_POST['turno_b']==3)echo"selected";?>>3</option>
+                                    <option value="4" <? if($_POST['turno_b']==4)echo"selected";?>>4</option>
                                    
                                   </select>
 								  </td>
                                   <td><input type="submit" class="btn red-submit button-form" name="buscar" value="Buscar"/></td>
-                                  <td><a href="exportar_down_time_report.php?desde=<?echo"$desde";?>&hasta=<?echo"$hasta"?>&lugar=<?echo"$lugar_b"?>&tipo=<?echo"$tipo_b"?>" target="_blank"><img src="images/descarga.png" width="46" height="46" border="0" title="Exportar" /></a></td>
+                                  <td><a href="exportar_down_time_report.php?desde=<?echo"$desde";?>&hasta=<?echo"$hasta"?>&lugar_b=<?echo"$lugar_b"?>&tipo_b=<?echo"$tipo_b"?>&turno_b=<?echo"$turno_b"?>" target="_blank"><img src="images/descarga.png" width="46" height="46" border="0" title="Exportar" /></a></td>
                                 </tr>
                               </table>							    
 							    
@@ -332,8 +334,9 @@ if($_POST['buscar']=="Buscar")
 	}
 	if($_POST['turno_b']!=0){
 		$buscar3="turno=".$_POST['turno_b']." and";
-	}
-	
+	}else{
+        $buscar3="turno<>4 and";
+    }
 	//$variable buscarl estaba mal escrita en la consulta.
 	$consulta="SELECT  DATE_FORMAT(inicio, '%Y-%m-%d') as inicio, DATE_FORMAT(fin, '%Y-%m-%d') as fin, reason,razon_id,  FORMAT(TIME_TO_SEC(timediff(fin, inicio))/60,0) as d2, locations.name, first_name, last_name, autorized_by FROM `cut_pause` inner join down_time_reason on cut_pause.razon_id=down_time_reason.id inner join locations on cut_pause.location_id=locations.id left outer join users on cut_pause.autorized_by=users.id where $buscar1 $buscar2 $buscar3   DATE_FORMAT(inicio, '%Y-%m-%d')>='".$_POST['desde']."' and DATE_FORMAT(inicio, '%Y-%m-%d')<='".$_POST['hasta']."'  ";
 	//echo"$consulta";

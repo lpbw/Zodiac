@@ -63,7 +63,7 @@ $consulta2  = "SELECT count(id)  FROM cut_pause where id_cut=$id and razon_id=0"
 		if($pausas=="0")
 		echo"<script>parent.location=\"cortes_prod.php\"</script>";
 }		
-	$consulta  = "SELECT cuts.id,mo, cn, cut_type.nombre, length_measured, locations.name, location_capacities.number, rolls.lote, roll_fibers.fiber_type, rolls.remaining_inches, cuts.status  FROM cuts inner join cut_type on cut_type.id=cuts.id_cut_type left outer join locations on cuts.location_assigned_id=locations.id left outer join location_capacities on cuts.number_position=location_capacities.id inner join rolls on rolls.id=cuts.roll_id inner join roll_fibers on rolls.fiber_id=roll_fibers.fiber_type where cuts.deleted_at is null and cuts.id=$id ";
+	$consulta  = "SELECT cuts.id,mo, cn, cut_type.nombre, length_measured, locations.name, location_capacities.number, rolls.lote, roll_fibers.fiber_type, rolls.remaining_inches, cuts.status  FROM cuts inner join cut_type on cut_type.id=cuts.id_cut_type left outer join locations on cuts.location_assigned_id=locations.id left outer join location_capacities on cuts.number_position=location_capacities.id inner join rolls on rolls.id=cuts.roll_id inner join roll_fibers on cuts.fiber_id=roll_fibers.fiber_type where cuts.deleted_at is null and cuts.id=$id ";
 	//echo"$consulta";
 	$resultado = mysql_query($consulta) or die("La consulta fall&oacute;P1: " . mysql_error());
 	if(@mysql_num_rows($resultado)>=1)

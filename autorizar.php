@@ -160,10 +160,10 @@ if(@mysql_num_rows($resultadoT)>0)
             if(@mysql_num_rows($resultado)>0)
             {
                 $res=mysql_fetch_row($resultado);
-              	 $consulta  =  "update cut_pause set razon='".$diag."', autorized=".$res[0].", razon_id=$razon_id, fin=now() where id=".$pausa_id; //,  razon='$razon', razon_id=$razon_id
+              	 $consulta  =  "update cut_pause set razon='".$diag."', autorized=".$res[0].", razon_id=$tipo, fin=now() where id=".$pausa_id; //,  razon='$razon', razon_id=$razon_id
                 $resultado = mysql_query($consulta) or die("Error en operacion1: $consulta " . mysql_error());
-				$consulta  =  "insert into cut_pause(id_cut, inicio, razon_id, turno, location_id, user_id) values($id_cut, now(), 0, $turno,$locationU,$idU)";
-                $resultado = mysql_query($consulta) or die("Error en operacion1: $consulta " . mysql_error());
+				//$consulta  =  "insert into cut_pause(id_cut, inicio, razon_id, turno, location_id, user_id) values($id_cut, now(), 0, $turno,$locationU,$idU)";
+               // $resultado = mysql_query($consulta) or die("Error en operacion1: $consulta " . mysql_error());
 				 $consulta  =  "update locations set estatus=1 where id=".$locationU; //quita bypass a maquina a solicitud de mantenimiento.
                 $resultado = mysql_query($consulta) or die("Error en operacion1: $consulta " . mysql_error());
 				echo"<script> window.location=\"cortes_prod.php\";</script>";
@@ -187,7 +187,7 @@ if(@mysql_num_rows($resultadoT)>0)
             if(@mysql_num_rows($resultado)>0)
             {
                 $res=mysql_fetch_row($resultado);
-              	 $consulta  =  "update cut_pause set razon='".$diag."', autorized=".$res[0].", razon_id=$razon_id, fin=now() where id=".$pausa_id; 
+              	 $consulta  =  "update cut_pause set razon='".$diag."', autorized=".$res[0].", razon_id=$tipo, fin=now() where id=".$pausa_id; 
                 $resultado = mysql_query($consulta) or die("Error en operacion1: $consulta " . mysql_error());
 				$consulta  =  "insert into cut_pause(id_cut, inicio, razon_id, turno, location_id, user_id) values($id_cut, now(), 3, $turno,$locationU,$idU)";
                 $resultado = mysql_query($consulta) or die("Error en operacion1: $consulta " . mysql_error());

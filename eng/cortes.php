@@ -119,13 +119,14 @@ if($guardar=="Save")
 			}
 		
 		 //cuando se va a guardar un parche
-		if($_POST["id_cut_type"]=="3")
-		{
-		      $roll_id=$_POST["roll_id"];
+                if($_POST["id_cut_type"]=="3")
+                {
+                    $roll_id=$_POST["roll_id"];
                     $Arreglo = explode("|",$roll_id);
                     $IdRollo = $Arreglo[0];
+                    $roll_id = $IdRollo;
                     $Fibra = $Arreglo[1];
-
+                    $loc_asi=$_POST["location_assigned_id"];
                     ///////////// Si Catura longitud seleccionado, guarda corte, resta fibra
                     if($_POST["captura"]=="1")
                     {
@@ -143,14 +144,14 @@ if($guardar=="Save")
                            
                                 //$orden=1;
                                 $consulta2  =  "insert into cuts(mo, cn, roll_id, user_id, location_assigned_id, number_position, orden, length_measured, created_at, id_cut_type, id_programa, parte, fiber_id, length_consumed, length_defect,status)";
-                                $consulta2 .= "values('".$_POST["mo"]."', '0', '".$IdRollo."', $idU, '0', '0', '0',  '0', now(), '".$_POST["id_cut_type"]."', '0', '0', '$Fibra', ".$long.", ".$long_def.", ".$status.")";
+                                $consulta2 .= "values('".$_POST["mo"]."', '0', '".$IdRollo."', $idU, '$loc_asi', '0', '0',  '0', now(), '".$_POST["id_cut_type"]."', '0', '0', '$Fibra', ".$long.", ".$long_def.", ".$status.")";
                                 $resultado2 = mysql_query($consulta2) or die("Error en operacion1: $consulta2 " . mysql_error());
                             	   
                      //   }
                   //  }
-                    //echo"<script>alert('$long');</script>"; 
+                    
                     echo"<script>alert(\"Parches Guardados\");</script>";
-		}
+                }
 		else		
 		{
 		//crea una orrden de corte para fibra especificado

@@ -258,6 +258,8 @@ Funcion llamada en cortes cuando seleccionas tipos de corte.
 */
 function buscaParche()
 {
+    $('#id_p').prop('required', true);
+    $('#nparte').prop('required', true);
     $("#captura").prop("checked", false);
     $('#id_p').val("");
     $('#nparte').val("");
@@ -296,6 +298,8 @@ function buscaParche()
     {
         $("#captura").prop("checked", true);
         $('#length_measured').val(0);
+        $('#id_p').prop("required", false);
+        $('#nparte').prop("required", false);
         var strUserAgent = navigator.userAgent.toLowerCase(); 
         var isIE = strUserAgent.indexOf("msie") > -1; 
         var xmlhttp;
@@ -460,8 +464,13 @@ function buscaLugar()
     }
     else 
     {
-        alert('Programa no seleccionado');
-        $( "#id_p" ).focus();
+        //console.log($('#id_cut_type').val());
+        
+        if ($('#id_cut_type').val() != 3) {
+            alert('Programa no seleccionado');
+            $("#id_p").focus();
+        }
+        
     }
 		
 }

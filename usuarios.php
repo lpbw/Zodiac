@@ -41,7 +41,7 @@ if($guardar=="Guardar")
 	$last_name= $_POST["last_name"];
 	$password= sha1($_POST["password"]);
 	$level_id= $_POST["level_id"];
-	if(($level_id=="1" || $level_id=="5") && $tipoU=="2")
+	if($level_id=="1" && $tipoU=="2")
 	{
 		echo"<script>alert(\"No se puede crear o cambiar usuarios con ese nivel.\");</script>";
 	}

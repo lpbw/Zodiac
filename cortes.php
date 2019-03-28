@@ -135,8 +135,9 @@
                     $roll_id=$_POST["roll_id"];
                     $Arreglo = explode("|",$roll_id);
                     $IdRollo = $Arreglo[0];
+                    $roll_id = $IdRollo;
                     $Fibra = $Arreglo[1];
-
+                    $loc_asi=$_POST["location_assigned_id"];
                     ///////////// Si Catura longitud seleccionado, guarda corte, resta fibra
                     if($_POST["captura"]=="1")
                     {
@@ -154,12 +155,12 @@
                            
                                 //$orden=1;
                                 $consulta2  =  "insert into cuts(mo, cn, roll_id, user_id, location_assigned_id, number_position, orden, length_measured, created_at, id_cut_type, id_programa, parte, fiber_id, length_consumed, length_defect,status)";
-                                $consulta2 .= "values('".$_POST["mo"]."', '0', '".$IdRollo."', $idU, '0', '0', '0',  '0', now(), '".$_POST["id_cut_type"]."', '0', '0', '$Fibra', ".$long.", ".$long_def.", ".$status.")";
+                                $consulta2 .= "values('".$_POST["mo"]."', '0', '".$IdRollo."', $idU, '$loc_asi', '0', '0',  '0', now(), '".$_POST["id_cut_type"]."', '0', '0', '$Fibra', ".$long.", ".$long_def.", ".$status.")";
                                 $resultado2 = mysql_query($consulta2) or die("Error en operacion1: $consulta2 " . mysql_error());
                             	   
                      //   }
                   //  }
-                    //echo"<script>alert('$long');</script>"; 
+                    
                     echo"<script>alert(\"Parches Guardados\");</script>";
                 }
                 else		
@@ -189,12 +190,31 @@
 									$consulta2  =  "insert into cuts(mo, cn, roll_id, user_id, location_assigned_id, number_position, orden, length_measured, created_at, id_cut_type, id_programa, parte, fiber_id, length_consumed, length_defect, status) values('".$_POST["mo"]."', '".$cn."', '".$roll_id."', $idU, '".$resl[0]."', '0', ".$orden.",  '0', now(), '".$_POST["id_cut_type"]."', '0', '0', '0', ".$long.", ".$long_def.", ".$status.")";
 									$resultado2 = mysql_query($consulta2) or die("Error en operacion1: $consulta2 " . mysql_error());
 									$countl=$countl+1;
-									}
-									echo"<script>alert(\"Dailys Guardados\");</script>";
+								}
+								echo"<script>alert(\"Dailys Guardados\");</script>";
 								
-					}
+					}// fin de daily
 					else
 					{
+						if($_POST["id_cut_type"]=="5" || $_POST["id_cut_type"]=="7") // si es ingeniria o preimpreso
+						{
+							$consulta6="select max(orden) as orden from cuts where location_assigned_id=".$loc_asi." and status<3 and deleted_at is null";
+							$resultado6 = mysql_query($consulta6) or die("Error en operacion1: $consulta6 " . mysql_error());
+							$res6=mysql_fetch_assoc($resultado6);
+							$orden=$res6['orden'];
+							if($orden>0)
+							{
+								$orden=$orden+1;
+							}
+							else
+							{
+								$orden=1;
+							}			
+							$consulta2  =  "insert into cuts(mo, cn, roll_id, user_id, location_assigned_id, number_position, orden, length_measured, created_at, id_cut_type, id_programa, parte, fiber_id, length_consumed, length_defect, status) values('".$_POST["mo"]."', '".$cn."', '".$roll_id."', $idU, '".$loc_asi."', '0', ".$orden.",  '0', now(), '".$_POST["id_cut_type"]."', '0', '0', '0', 0, 0, 0)";
+							$resultado2 = mysql_query($consulta2) or die("Error en operacion1: $consulta2 " . mysql_error());
+							
+							}
+						}// finde ing preimpreso
 						$fibra_id=$_POST["fibra_id"];
 						if(sizeof($fibra_id)>0)
 						{
@@ -216,6 +236,7 @@
 								$consulta2  =  "insert into cuts(mo, cn, roll_id, user_id, location_assigned_id, number_position, orden, length_measured, created_at, id_cut_type, id_programa, parte, fiber_id, length_consumed, length_defect, status) values('".$_POST["mo"]."', '".$cn."', '".$roll_id."', $idU, '".$loc_asi."', '0', ".$orden.",  '0', now(), '".$_POST["id_cut_type"]."', '".$_POST["id_programa"]."', '".$_POST["parte"]."', '$na', ".$long.", ".$long_def.", ".$status.")";
 								$resultado2 = mysql_query($consulta2) or die("Error en operacion1: $consulta2 " . mysql_error());
 							}
+						}
                     }
                     
                         if($_POST["captura"]=="1")///////////// Si Captura longitud seleccionado, resta fibra
@@ -255,10 +276,10 @@
                                 $contador++;
                             }	
                         }
-                        echo"<script>alert(\"Corte Agregado con CN= $cn\");</script>";
+                        echo"<script>alert(\"Corte Agregado \");</script>";
                     
-                    }
-                }
+                   // }
+                //}
             }
             
             $borrar= $_POST["borrar"];
@@ -386,7 +407,7 @@
                                     <input name="id" type="hidden" id="id" value="<?echo"$id";?>">
                                     <input name="borrar" type="hidden" id="borrar">
 								    <input name="lugar_b1" id="lugar_b" type="hidden"/>
-                                    <input type="text" class="form-control" id="mo" name="mo" value="" required/>
+                                    <input type="text" class="form-control" id="mo" name="mo" value="" required=/>
                                 </div>
 
 
@@ -611,7 +632,7 @@
 					    <form name="form2" action="" method="post" class="margin-bottom" accept-charset="utf-8">
 
                             <!-- Filtros buscar -->
-				            <div class="col-lg-12 table-responsive">
+			              <div class="col-lg-12 table-responsive">
 				                <table class="table table-striped table-condensed">
 				                    <thead>
 				                        <tr>
@@ -636,7 +657,7 @@
                                             <!-- seleccionar estatus -->
 				                            <th colspan="3">
                                                 <select class="form-control" id="estatus_b" name="estatus_b"  style="width:150">
-                                                    <option selected="selected">Estatus</option>
+                                                    <option value="Estatus" selected="selected">Estatus</option>
                                                     <option value="0" <? echo $es==0?"selected":"";?>>Pendiente</option>
                                                     <option value="1" <? echo $es==1?"selected":"";?>>Activo</option>
                                                     <option value="3" <? echo $es==3?"selected":"";?>>Terminado</option>

@@ -1,0 +1,3 @@
+05 03 2019 14:03:03 El Archivo logs.txt se ha creado
+05 03 2019 14:03:02 El Archivo logs.txt se ha modificado
+SELECT numero, id FROM turnos WHERE CURTIME()>inicio AND CURTIME()<fin AND dias LIKE '%2%'

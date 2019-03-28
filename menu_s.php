@@ -1,6 +1,6 @@
  <? $dominio=$_SERVER['HTTP_HOST'];
       $resto= array_pop(explode('/', $_SERVER['PHP_SELF']));
-	  $urlcompleta="http://".$dominio."/eng/".$resto;
+	  $urlcompleta="http://".$dominio."/zodiac/eng/".$resto;
 	  //echo $urlcompleta;
  ?>  
  <ul class="nav navbar-top-links navbar-right">

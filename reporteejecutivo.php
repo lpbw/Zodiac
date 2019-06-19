@@ -380,7 +380,6 @@
                     })
                     .done(function( response ) {
                         //alert(response);
-                         myChart.data.showAllTooltips = false;
                         myChart.data.labels=["Activo ("+response[0]+"min)", "Mantenimiento ("+response[1]+"min)", "Operador ("+response[2]+"min)"];
                         myChart.data.datasets[0].data=[response[0],response[1],response[2]];
                         myChart.update();

@@ -41,7 +41,7 @@
 	// buscar condicion si es despues de las 12 y antes de las 12:30 tomar el dia anterior
     $consultaTurno  = "SELECT numero, id FROM turnos WHERE CURTIME()>inicio AND CURTIME()<fin AND dias LIKE '%".$dia_semana."%'";
     $resultadoTurno = mysql_query($consultaTurno) or die("La consultaTurno fallo: $consultaTurno " . mysql_error());
-    echo $consultaTurno;
+    //echo $consultaTurno;
     if(@mysql_num_rows($resultadoTurno)>0)
     {
         $resTurno=mysql_fetch_row($resultadoTurno);

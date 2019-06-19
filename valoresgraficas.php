@@ -39,14 +39,14 @@
             $QueryTiempos = "SELECT SUM(tiempo) AS tiempo FROM cierre_turnos WHERE tipo=99 AND DATE_FORMAT(fecha,'%Y-%m-%d')>='$Desde' AND DATE_FORMAT(fecha,'%Y-%m-%d')<='$Hasta' ".$Filtro1.$Filtro2;
             $ResultadoTiempos = mysql_query($QueryTiempos) or die("Error en Tiempos $QueryTiempos".mysql_error());
             $ResulTiempos = mysql_fetch_assoc($ResultadoTiempos);
-            $TiempoActivo = str_replace(",","",$ResTiempos['tiempo']);
+            $TiempoActivo = str_replace(",","",$ResulTiempos['tiempo']);
             //$TiempoActivo = $ResTiempos['tiempo'];
 
             /**Tiempos mantenimiento  obtenidos de la tabla  cut_pause*/
             $QueryMtto = "SELECT SUM(TIMESTAMPDIFF(minute,cp.inicio,cp.fin)) AS tiempo FROM cut_pause cp INNER JOIN down_time_reason dt ON cp.razon_id=dt.id WHERE dt.grupo=1 AND DATE_FORMAT(cp.inicio,'%Y-%m-%d') BETWEEN '$Desde' AND '$Hasta' ".$Filtro1.$Filtro2;
             $ResultadoMtto = mysql_query($QueryMtto) or die("Error en Tiempos $QueryMtto".mysql_error());
             $ResulMtto = mysql_fetch_assoc($ResultadoMtto);
-            $TiempoMtto = str_replace(",","",$ResMtto['tiempo']);
+            $TiempoMtto = str_replace(",","",$ResulMtto['tiempo']);
             //$TiempoMtto = $ResMtto['tiempo'];
 
             /**Tiempos operador  obtenidos de la tabla  cut_pause*/
@@ -59,7 +59,7 @@
             $Datos = array($TiempoActivo, $TiempoMtto, $TiempoOperador);
             
             echo json_encode($Datos);
-            //$QueryTiempos;
+            //echo $TiempoActivo;
         break;
         
         //grafica 2

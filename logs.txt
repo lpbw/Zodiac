@@ -1,3 +1,22 @@
-05 03 2019 14:03:03 El Archivo logs.txt se ha creado
-05 03 2019 14:03:02 El Archivo logs.txt se ha modificado
-SELECT numero, id FROM turnos WHERE CURTIME()>inicio AND CURTIME()<fin AND dias LIKE '%2%'
+31 05 2019 18:05:07 El Archivo logs.txt se ha creado
+ Fin turno 1 31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ SELECT FORMAT(sum(TIME_TO_SEC(timediff(fin, inicio))/60),0) as d2, grupo, location_id FROM `cut_pause` inner join down_time_reason on cut_pause.razon_id=down_time_reason.id where turno=1 and year(inicio)=year('2019/05/31') and month(inicio)=month('2019/05/31') and day(inicio)=day('2019/05/31')  AND fin is NOT null group by location_id order by location_id31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ Resource id #1031 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ insert into cierre_turnos(turno1,fecha, tipo,tiempo, location_id, grupo) values(1, '2019/05/31',  99,539,1,0)31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ Error en insert cierre_turno:  Unknown column 'turno1' in 'field list'31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ insert into cierre_turnos(turno1,fecha, tipo,tiempo, location_id, grupo) values(1, '2019/05/31',  99,540,2,0)31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ Error en insert cierre_turno:  Unknown column 'turno1' in 'field list'31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ insert into cierre_turnos(turno1,fecha, tipo,tiempo, location_id, grupo) values(1, '2019/05/31',  99,540,3,0)31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ Error en insert cierre_turno:  Unknown column 'turno1' in 'field list'31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ insert into cierre_turnos(turno1,fecha, tipo,tiempo, location_id, grupo) values(1, '2019/05/31',  99,537,4,0)31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ Error en insert cierre_turno:  Unknown column 'turno1' in 'field list'31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ insert into cierre_turnos(turno1,fecha, tipo,tiempo, location_id, grupo) values(1, '2019/05/31',  99,539,5,0)31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ Error en insert cierre_turno:  Unknown column 'turno1' in 'field list'31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ insert into cierre_turnos(turno1,fecha, tipo,tiempo, location_id, grupo) values(1, '2019/05/31',  99,524,6,0)31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ Error en insert cierre_turno:  Unknown column 'turno1' in 'field list'31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ insert into cierre_turnos(turno1,fecha, tipo,tiempo, location_id, grupo) values(1, '2019/05/31',  99,536,7,0)31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ Error en insert cierre_turno:  Unknown column 'turno1' in 'field list'31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ insert into cierre_turnos(turno1,fecha, tipo,tiempo, location_id, grupo) values(1, '2019/05/31',  99,533,8,0)31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ Error en insert cierre_turno:  Unknown column 'turno1' in 'field list'31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ insert into cierre_turnos(turno1,fecha, tipo,tiempo, location_id, grupo) values(1, '2019/05/31',  99,509,11,0)31 05 2019 18:05:07 El Archivo logs.txt se ha modificado
+ Error en insert cierre_turno:  Unknown column 'turno1' in 'field list'
